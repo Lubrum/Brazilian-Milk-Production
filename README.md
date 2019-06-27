@@ -1,7 +1,7 @@
 # Summary
 
-This project is related to some researches about the Brazilian dairy milk production. This project was developed during my graduation in Applied Computing in Federal University of Pampa, in partnership with Brazilian Agricultural Research Corporation (known as Embrapa).
-The content of this project can be found in this expanded resume -> (http://publicase.unipampa.edu.br/index.php/siepe/article/view/40708). It is in portuguese, but in time, I can provide an english version of it.
+This project is related to some researches about the Brazilian dairy milk production. This project was developed during my graduation in [Applied Computing](http://cursos.unipampa.edu.br/cursos/ppgcap/) in [Federal University of Pampa](http://novoportal.unipampa.edu.br/novoportal/), in partnership with [Brazilian Agricultural Research Corporation](https://www.embrapa.br/en/international), also known as Embrapa.
+The content of this project can be found in this [expanded resume] (http://publicase.unipampa.edu.br/index.php/siepe/article/view/40708). It is in portuguese, but in time, I can provide an english version of it.
 
 # How-to
 
