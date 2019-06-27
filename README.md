@@ -12,12 +12,12 @@ Open your RStudio or other IDE with R language. Set you directory as the working
 ```R
 setwd("working_directory")
 ```
-To sucessfully read the csv file, we need to use the skip and nrows arguments of read.csv2. Also, one of the rows will not have valuable information, so we can remove it from the dataframe. 
+To sucessfully read the csv file, we need to use the **skip** and **nrows** arguments of **read.csv2**. Also, the first row and colunm have not valuable information, so we can remove it from the dataframe. 
 ```R
 milk_production <- read.csv2('Planilhas/table74.csv',skip=3, nrows=3)
 milk_production <- milk_production[-1,-1]
 ```
-We need to clean the years data, because it is a String, not integer, and has some dirty characters to be removed. In the end we reshape our dataframe to use it in plotly. In other words, we set the rows as colums and we will have only one colunm called "years". We need to use as.numeric and as.character to convert the data from factor to numeric.
+We need to clean the years, because it is a String, not Integer, and it is in format "X....". We also reshape our dataframe to use it in **plotly**, setting the rows as colunms and we will have only one colunm named "years". We need to use **as.numeric** and **as.character** to convert the data from **factor** to **numeric**.
 ```R
 colnames(milk_production) <- gsub("X",'',colnames(milk_production))
 years <- as.integer(colnames(milk_production))
@@ -25,12 +25,12 @@ brazilian_milk <- as.numeric(as.character(unlist(milk_production[1,], use.names=
 rs_milk <- as.numeric(as.character(unlist(milk_production[2,], use.names=FALSE)))
 data <- data.frame(brazilian_milk, rs_milk, years)
 ```
-Now we will create two linear models (linear regression), one for brazil and one for the RS state to use them in plotly function.
+Now we create two linear models (linear regression), one for Brazil and one for the RS State to use them in **plotly**.
 ```R
 l<-lm(data$brazilian_milk/1000000~years,data=data)
 l2<-lm(data$rs_milk/1000000~years,data=data)
 ```
-Now we use the plot_ly function. First, we need to install and import the library and its dependences.
+Now we use the **plotly** function. First, we need to install and import the library and its dependences.
 ```R
 install.packages("plotly")
 library(plotly)
@@ -46,10 +46,8 @@ add_lines(y = fitted(l2), name = 'RS state', line = list(color = 'rgb(255,0,0)',
 layout(xaxis = labelx, yaxis = labely)
 ```
 ![Alt text](figures/figure1.png?raw=true "Title")
-Now, the second part of our exploratory analysis, we will get the number of dairy farms from Brazil in 2006 and 2017 through the links above:
-(https://sidra.ibge.gov.br/tabela/6783)
-(https://sidra.ibge.gov.br/tabela/933)
-And them, we perform the same procedure that we did before with the milk production data.
+Now, the second part of our exploratory analysis, we will get the number of dairy farms from Brazil in [2006](https://sidra.ibge.gov.br/tabela/6783) and [2017](https://sidra.ibge.gov.br/tabela/933).
+And them, we perform the same procedure that we did before with the milk production data. Note that **skip** and **nrows** arguments changed. Check the .csv file to notice the differences and what rows and colunms need to be removed.
 ```R
 properties_2006 <- read.csv2('Planilhas/table933.csv',skip=5, nrows=1)
 properties_2017 <- read.csv2('Planilhas/table6783.csv',skip=5, nrows=1)
@@ -57,8 +55,12 @@ properties_2006 <- properties_2006[,-(1:2)] #metadata removing
 properties_2017 <- properties_2017[,-1]     #metadata removing
 properties_2006 <- as.numeric(as.character(unlist(properties_2006[1,], use.names=FALSE)))
 properties_2017 <- as.numeric(as.character(unlist(properties_2017[1,], use.names=FALSE)))
+```
+Now, with the **NROW** command, we noticed that we have not the same number of samples in 2006 and 2017. We saw that properties from 2017 had one range more than 2006 (the 2500-10000 hectares). So we add the two last samples and merged into one.
+```R
+NROW(properties_2006) == NROW(properties_2017)
 properties_2017[18] <- properties_2017[18] + properties_2017[19] 
-properties_2017 <- properties_2017[-19] #the samples of farms with 10k+ of area inexists in 2006, so we just add them with 2,5k+ of area samples
+properties_2017 <- properties_2017[-19] 
 ```
 Now we manually create two lists, one with the ranges of property area (in hectares) and the other is just a sequence of integers to sort the ranges properly in the graphics.
 ```R
