@@ -8,7 +8,7 @@ The content of this project can be found in this [Expanded Resume](http://public
 The first step is to get the data about the dairy milk production to perform the analysis. 
 In Brazil, we can get this specific data here (https://sidra.ibge.gov.br/tabela/74). Here, we select just "Milk production", all years from the historic and the region units "Brazil" and "Rio Grande do Sul". The reason is that we will perform an exploratory analysis with all historic data from milk production in Rio Grande do Sul state and Brazil. You can download the data and specify the file format. In this case, we will choose the .csv (BR). Save this file in the same folder where you will create your R project.
 From here we have two alternatives: you can manually open the csv file and remove some useless metadata or you can use the own R language to clean this data. For automation purpose, we will follow the second option.
-Open your RStudio or other IDE with R language. Set you directory as the working directory with the RStudio or you can do this using:
+Open your RStudio or any other environment with R language. Set you directory as the working directory with the RStudio or you can do this using:
 ```R
 setwd("working_directory")
 ```
