@@ -12,7 +12,7 @@ Open your RStudio or other IDE with R language. Set you directory as the working
 ```R
 setwd("working_directory")
 ```
-To sucessfully read the csv file, we need to use the #### skip and #### nrows arguments of #### read.csv2. Also, one of the rows will not have valuable information, so we can remove it from the dataframe. 
+To sucessfully read the csv file, we need to use the skip and nrows arguments of read.csv2. Also, one of the rows will not have valuable information, so we can remove it from the dataframe. 
 ```R
 milk_production <- read.csv2('Planilhas/table74.csv',skip=3, nrows=3)
 milk_production <- milk_production[-1,-1]
