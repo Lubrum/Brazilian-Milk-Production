@@ -228,7 +228,7 @@ plot(shape_rs$geometry,col = shape_rs$Color,axes = TRUE,bg='light blue',main="Mi
 legend(-62,-28.5,legend=c(rev(unique(shape_rs$Range))),fill =c(rev(unique(shape_rs$Color))),bg = "gray",cex=0.9)
 text(-60.7,-27.9,"Variation Ranges",cex=.95)
 ```
-![Alt text](figures/figure5.png?raw=true "Title")
+![Alt text](figures/figure5.png.png?raw=true "Title")
 
 
 
