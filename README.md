@@ -150,7 +150,7 @@ Now we merge the milk production datasets with the shapefile using the city name
 shape_rs<-sp::merge(shape_rs, milk_production_2017_rs,by.x="Label_N",by.y="City", all.x=T)
 shape_rs<-sp::merge(shape_rs, milk_production_2006_rs,by.x="Label_N",by.y="City", all.x=T)
 ```
-Now we check and Colorrect the rows with missing values for milk production. We also convert this values to numeric.
+Now we check and correct the rows with missing values for milk production. We also convert this values to numeric.
 ```R
 shape_rs[is.na(shape_rs$Milk_2006),]
 shape_rs[is.na(shape_rs$Milk_2017),]
