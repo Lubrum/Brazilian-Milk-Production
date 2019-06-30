@@ -48,6 +48,89 @@ add_lines(y = fitted(l2), name = 'RS state', line = list(color = 'rgb(255,0,0)',
 layout(xaxis = labelx, yaxis = labely)
 ```
 ![Alt text](figures/figure1.png?raw=true "Title")
+
+We can get the milk production data of all states from Brazil and create an animated bar chart race. First we load the needed packages and load the [Data](https://sidra.ibge.gov.br/tabela/74).
+```R
+if(!require(tidyverse)){
+    install.packages("tidyverse")
+    library(tidyverse)
+}
+if(!require(janitor)){
+    install.packages("janitor")
+    library(janitor)
+}
+milk_production_states <- read.csv2('Planilhas/table74_brazil.csv', skip=3, nrows=31, stringsAsFactors = FALSE, encoding="UTF-8")
+```
+If we check the data, we will see a need for cleaning. That is what we do next.
+```R
+milk_production_states <- milk_production_states[-(1:2),]
+milk_production_states <- milk_production_states[-(29:32),]
+colnames(milk_production_states) <- gsub("X",'',colnames(milk_production_states))
+colnames(milk_production_states)[1] <- "Brazilian_States"
+for(i in 2:ncol(milk_production_states)){
+        milk_production_states[,i]<-gsub("[...]",'0',milk_production_states[,i])
+        milk_production_states[,i]<-as.numeric(as.character(unlist(milk_production_states[,i])))
+}
+```
+The next part is the data processing to create the animated bar plots. The method is based on this [Tutorial](https://towardsdatascience.com/create-animated-bar-charts-using-r-31d09e5841da), from [Towards Data Science](https://towardsdatascience.com/). Go there for more information about it.
+```R
+milk_production_states <- milk_production_states %>% mutate_at(vars(colnames(milk_production_states)[2:45]),as.numeric) %>% gather(year,value,2:45) 
+milk_production_states$year <- as.numeric(milk_production_states$year)
+
+milk_production_states <- milk_production_states %>%
+    group_by(year) %>%
+    mutate(rank = rank(-value),
+           Value_rel = value/value[rank==1],
+           Value_lbl = paste0(" ",round((value*1000)/1000000000,2)),
+           show_time = case_when(year %in% c(2017) ~ 10,TRUE ~ 1),
+           reveal_time = cumsum(show_time)) %>%
+    group_by(Brazilian_States) %>% 
+    filter(rank <= 10) %>%
+    ungroup()
+
+staticplot = ggplot(milk_production_states, aes(rank, group = Brazilian_States, 
+    fill = as.factor(Brazilian_States), color = as.factor(Brazilian_States))) +
+    geom_tile(aes(y = value/2,height = value, width = 0.9), alpha = 0.8, color = NA) +
+    geom_text(aes(y = 0, label = paste(Brazilian_States, " "), vjust = 0.2, hjust = 1, size = 6)) +
+    geom_text(aes(y = value, label = Value_lbl, hjust=0, size = 6)) +
+    coord_flip(clip = "off", expand = FALSE) +
+    transition_reveal(year, reveal_time) +
+    scale_y_continuous(labels = scales::comma) +
+    scale_x_reverse() +
+    guides(color = FALSE, fill = FALSE) +
+    theme(axis.line=element_blank(),
+          axis.text.x=element_blank(),
+          axis.text.y=element_blank(),
+          axis.ticks=element_blank(),
+          axis.title.x=element_blank(),
+          axis.title.y=element_blank(),
+          legend.position="none",
+          panel.background=element_blank(),
+          panel.border=element_blank(),
+          panel.grid.major=element_blank(),
+          panel.grid.minor=element_blank(),
+          panel.grid.major.x = element_line( size=.1, color="grey" ),
+          panel.grid.minor.x = element_line( size=.1, color="grey" ),
+          plot.title=element_text(size=30, hjust=0.5, face="bold", colour="black", vjust=-1),
+          plot.subtitle=element_text(size=22, hjust=0.5, face="italic", color="black"),
+          plot.caption =element_text(size=15, hjust=0.5, face="italic", color="black"),
+          plot.background=element_blank(),
+          plot.margin = margin(2, 2, 8, 8, "cm"))
+
+if(!require(gganimate)){
+    install.packages("gganimate")
+    library(gganimate)
+}
+anim = staticplot + transition_time(year)+
+    view_follow(fixed_x = TRUE)  +
+  labs(title = 'Milk Production in Brazilian States (Billions of Liters): {round(frame_time)}',  
+  subtitle  =  "Top 10 States",
+  caption  = "Milk Production in Brazilian States in Billions of Liters | Fonte dos dados: Instituto Brasileiro de Estatística e Geografia.")
+
+animate(anim, 880, fps = 44, width = 1600, height = 1200, renderer = gifski_renderer("gganim.gif")) +  ease_aes('cubic-in-out') 
+```
+![Alt text](figures/gif1.gif?raw=true "Title")
+
 Now, the second part of our exploratory analysis, we will get the number of dairy farms from Brazil in [2006](https://sidra.ibge.gov.br/tabela/6783) and [2017](https://sidra.ibge.gov.br/tabela/933).
 And them, we perform the same procedure that we did before with the milk production data. Note that **skip** and **nrows** arguments changed. Check the .csv file to notice the Diffs and what rows and colunms need to be removed.
 ```R
@@ -82,7 +165,6 @@ layout(yaxis = list(showgrid = TRUE, showline = FALSE, showticklabels = TRUE, do
 add_annotations(xref = 'x1', yref = 'y',x = ((properties_2017-properties_2006)/properties_2006)*100,  y = properties_range, text = paste(round(((properties_2017-properties_2006)/properties_2006)*100, 2), '%'),font = list(family = 'Arial', size = 8, color = 'rgb(0, 0, 0)'),showarrow = FALSE)
 ```
 ![Alt text](figures/figure3.png?raw=true "Title")
-
 We can improve the analysis by making just one plot. This last example we reduced the number of ranges.
 ```R
 properties_range_2 <- c("0-10","10-20","20-50","50-100","100-200","200-1000","1000+","N.I")
