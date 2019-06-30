@@ -1,7 +1,7 @@
 # Summary
 
 This project is related to some researches about the Brazilian dairy milk production. This project was developed during my graduation in [Applied Computing](http://cursos.unipampa.edu.br/cursos/ppgcap/) in [Federal University of Pampa](http://novoportal.unipampa.edu.br/novoportal/), in partnership with [Brazilian Agricultural Research Colorporation](https://www.embrapa.br/en/international), also known as Embrapa.
-The content of this project can be found in this [Expanded Resume](http://publicase.unipampa.edu.br/index.php/siepe/article/view/40708). It is in portuguese, but in time, I can provide an english version of it.
+The content of this project can be found in this [Expanded Resume](http://publicase.unipampa.edu.br/index.php/siepe/article/view/40708). It is in portuguese, but in time, I can provide an english version of it. The purpose is to realize an exploratory analysis of dairy milk production data to generate meaningful visualizations, with focus on Brazil and Rio Grande do Sul state.
 
 # First Part
 
@@ -82,6 +82,7 @@ layout(yaxis = list(showgrid = TRUE, showline = FALSE, showticklabels = TRUE, do
 add_annotations(xref = 'x1', yref = 'y',x = ((properties_2017-properties_2006)/properties_2006)*100,  y = properties_range, text = paste(round(((properties_2017-properties_2006)/properties_2006)*100, 2), '%'),font = list(family = 'Arial', size = 8, color = 'rgb(0, 0, 0)'),showarrow = FALSE)
 ```
 ![Alt text](figures/figure3.png?raw=true "Title")
+
 We can improve the analysis by making just one plot. This last example we reduced the number of ranges.
 ```R
 properties_range_2 <- c("0-10","10-20","20-50","50-100","100-200","200-1000","1000+","N.I")
