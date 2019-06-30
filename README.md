@@ -165,6 +165,7 @@ layout(yaxis = list(showgrid = TRUE, showline = FALSE, showticklabels = TRUE, do
 add_annotations(xref = 'x1', yref = 'y',x = ((properties_2017-properties_2006)/properties_2006)*100,  y = properties_range, text = paste(round(((properties_2017-properties_2006)/properties_2006)*100, 2), '%'),font = list(family = 'Arial', size = 8, color = 'rgb(0, 0, 0)'),showarrow = FALSE)
 ```
 ![Alt text](figures/figure3.png?raw=true "Title")
+
 We can improve the analysis by making just one plot. This last example we reduced the number of ranges.
 ```R
 properties_range_2 <- c("0-10","10-20","20-50","50-100","100-200","200-1000","1000+","N.I")
