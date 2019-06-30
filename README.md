@@ -127,7 +127,7 @@ anim = staticplot + transition_time(year)+
   subtitle  =  "Top 10 States",
   caption  = "Milk Production in Brazilian States in Billions of Liters | Fonte dos dados: Instituto Brasileiro de Estatística e Geografia.")
 
-animate(anim, 880, fps = 44, width = 1600, height = 1200, renderer = gifski_renderer("gganim.gif")) +  ease_aes('cubic-in-out') 
+animate(anim, 880, fps = 44, width = 1600, height = 1200, renderer = gifski_renderer("gganim.gif", loop = FALSE)) +  ease_aes('cubic-in-out') 
 ```
 ![Alt text](figures/gif1.gif?raw=true "Title")
 
