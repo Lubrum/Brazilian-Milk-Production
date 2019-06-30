@@ -92,7 +92,7 @@ staticplot = ggplot(milk_production_states, aes(rank, group = Brazilian_States,
     fill = as.factor(Brazilian_States), color = as.factor(Brazilian_States))) +
     geom_tile(aes(y = value/2,height = value, width = 0.9), alpha = 0.8, color = NA) +
     geom_text(aes(y = 0, label = paste(Brazilian_States, " "), vjust = 0.2, hjust = 1, size = 6)) +
-    geom_text(aes(y = value, label = Value_lbl, hjust=0, size = 6)) +
+    geom_text(aes(y = value, label = Value_lbl, hjust = 0, size = 6)) +
     coord_flip(clip = "off", expand = FALSE) +
     transition_reveal(year, reveal_time) +
     scale_y_continuous(labels = scales::comma) +
@@ -312,20 +312,6 @@ legend(-62,-28.5,legend=c(rev(unique(shape_rs$Range))),fill =c(rev(unique(shape_
 text(-60.7,-27.9,"Variation Ranges",cex=.95)
 ```
 ![Alt text](figures/figure5.png.jpeg?raw=true "Title")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
