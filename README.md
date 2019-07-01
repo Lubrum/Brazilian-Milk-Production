@@ -77,7 +77,7 @@ The next part is the data processing to create the animated bar plots. The metho
 milk_production_states <- milk_production_states %>% mutate_at(vars(colnames(milk_production_states)[2:45]),as.numeric) %>% gather(year,value,2:45) 
 milk_production_states$year <- as.numeric(milk_production_states$year)
 
-milk_production_states <- milk_production_states %>%
+milk_production_states_1 <- milk_production_states %>%
     group_by(year) %>%
     mutate(rank = rank(-value),
            Value_rel = value/value[rank==1],
@@ -93,7 +93,7 @@ if(!require(gganimate)){
     library(gganimate)
 }
 
-staticplot = ggplot(milk_production_states, aes(rank, group = Brazilian_States, 
+staticplot = ggplot(milk_production_states_1, aes(rank, group = Brazilian_States, 
     fill = as.factor(Brazilian_States), color = as.factor(Brazilian_States))) +
     geom_tile(aes(y = value/2,height = value, width = 0.9), alpha = 0.8, color = NA) +
     geom_text(aes(y = 0, label = paste(Brazilian_States, " "), vjust = 0.2, hjust = 1, size = 6)) +
