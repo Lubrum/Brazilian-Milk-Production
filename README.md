@@ -88,6 +88,11 @@ milk_production_states <- milk_production_states %>%
     filter(rank <= 10) %>%
     ungroup()
 
+if(!require(gganimate)){
+    install.packages("gganimate")
+    library(gganimate)
+}
+
 staticplot = ggplot(milk_production_states, aes(rank, group = Brazilian_States, 
     fill = as.factor(Brazilian_States), color = as.factor(Brazilian_States))) +
     geom_tile(aes(y = value/2,height = value, width = 0.9), alpha = 0.8, color = NA) +
@@ -117,10 +122,6 @@ staticplot = ggplot(milk_production_states, aes(rank, group = Brazilian_States,
           plot.background=element_blank(),
           plot.margin = margin(2, 2, 8, 8, "cm"))
 
-if(!require(gganimate)){
-    install.packages("gganimate")
-    library(gganimate)
-}
 anim = staticplot + transition_time(year)+
     view_follow(fixed_x = TRUE)  +
   labs(title = 'Milk Production in Brazilian States (Billions of Liters): {round(frame_time)}',  
