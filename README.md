@@ -405,7 +405,7 @@ p <- ggplot() +
     geom_polygon(data = map_data, aes(fill = cat,x = long, y = lat, group = group)) +
     geom_path(data = map_data, aes(x = long, y = lat, group = group), color = "black", size = 0.1) +
     coord_equal() +
-    theme(legend.position = "bottom") +
+    theme(legend.position = "bottom", legend.title = element_text(size = 18), legend.text = element_text(size = 16), plot.title = element_text(size=22)) +
     labs(x = NULL, y = NULL, 
          title = "Milk Production in {round(frame_time,0)} ",
          subtitle = "Rio Grande do Sul - Brazil",
@@ -421,7 +421,7 @@ p <- p + scale_fill_manual(
         title.hjust = 0.5,
         label.hjust = 0.5,
         nrow = 1,
-        byrow = T,reverse = F,
+        byrow = T,reverse = T,
         label.position = "bottom"
     )
 )
