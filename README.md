@@ -405,10 +405,9 @@ p <- ggplot() +
     geom_polygon(data = map_data, aes(fill = cat,x = long, y = lat, group = group)) +
     geom_path(data = map_data, aes(x = long, y = lat, group = group), color = "black", size = 0.1) +
     coord_equal() +
-    theme(legend.position = "bottom", legend.title = element_text(size = 18), legend.text = element_text(size = 16), plot.title = element_text(size=22)) +
+    theme(legend.position = "bottom", legend.title = element_text(size = 20), legend.text = element_text(size = 18), plot.title = element_text(size=24)) +
     labs(x = NULL, y = NULL, 
-         title = "Milk Production in {round(frame_time,0)} ",
-         subtitle = "Rio Grande do Sul - Brazil",
+         title = "Milk Production in {round(frame_time,0)} - Rio Grande do Sul - Brazil ",
          caption = 'Source: IBGE, 2019') 
 p <- p + scale_fill_manual(
     values = rev(colorRampPalette(brewer.pal(5, "Greens"))(5)),
@@ -416,7 +415,7 @@ p <- p + scale_fill_manual(
     drop = FALSE,
     guide = guide_legend(
         direction = "horizontal",
-        keyheight = unit(2, units = "mm"),keywidth = unit(35, units = "mm"),
+        keyheight = unit(4, units = "mm"),keywidth = unit(45, units = "mm"),
         title.position = 'top',
         title.hjust = 0.5,
         label.hjust = 0.5,
