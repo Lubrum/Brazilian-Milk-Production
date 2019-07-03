@@ -407,11 +407,11 @@ p <- ggplot() +
     coord_equal() +
     theme(legend.position = "bottom", legend.title = element_text(size = 20), legend.text = element_text(size = 18), plot.title = element_text(size=24)) +
     labs(x = NULL, y = NULL, 
-         title = "Milk Production in {round(frame_time,0)} - Rio Grande do Sul - Brazil ",
-         caption = 'Source: IBGE, 2019') 
+         title = "Milk Production in {round(frame_time,0)} - Rio Grande do Sul - Brazil "
+    ) 
 p <- p + scale_fill_manual(
     values = rev(colorRampPalette(brewer.pal(5, "Greens"))(5)),
-    name = "Milk Production (Millions of Liters) ",
+    name = "Milk Production (Millions of Liters) - Source: IBGE, 2019.",
     drop = FALSE,
     guide = guide_legend(
         direction = "horizontal",
