@@ -315,6 +315,122 @@ text(-60.7,-27.9,"Variation Ranges",cex=.95)
 ```
 ![Alt text](figures/figure5.png.jpeg?raw=true "Title")
 
+## Third Part
+Now, we will create an animated map, showing how the milk production behaved in all cities from Rio Grande do Sul state, from Brazil. First, we download the needed [Data](https://sidra.ibge.gov.br/tabela/74) and clean the data. You need to check the data yourself before the cleaning stage to see what is wrong with the spreadsheet. We import and clean the data first.
+```R
+milk_production_rs_cities <- read.csv2('Planilhas/table74_rs_cities.csv', skip=3, stringsAsFactors = FALSE, encoding="UTF-8")
+milk_production_rs_cities<-milk_production_rs_cities[-(1:2),]
+milk_production_rs_cities<-milk_production_rs_cities[-(498:510),]
+colnames(milk_production_rs_cities) <- gsub("X",'',colnames(milk_production_rs_cities))
+colnames(milk_production_rs_cities)[1] <- "Cities"
+for(i in 2:ncol(milk_production_rs_cities)){
+        milk_production_rs_cities[,i]<-gsub("[...]","0",milk_production_rs_cities[,i])
+        milk_production_rs_cities[,i]<-gsub("[-]","0",milk_production_rs_cities[,i])
+        milk_production_rs_cities[,i]<-as.numeric(as.character(unlist(milk_production_rs_cities[,i])))
+}
+milk_production_rs_cities[,1]<-gsub(" [(]RS[)]","",milk_production_rs_cities[,1])
+```
+We load some needed packages to plot animated maps and load the shapefile from RS cities.
+```R
+if (!require(rgdal)) {
+  install.packages("rgdal", repos = "http://cran.us.r-project.org")
+  require(rgdal)
+}
+if (!require(RColorBrewer)) {
+  install.packages("rgdal", repos = "http://cran.us.r-project.org")
+  require(RColorBrewer)
+}
+if (!require(tweenr)) {
+  install.packages("tweenr", repos = "http://cran.us.r-project.org")
+  require(tweenr)
+}
+if (!require(transformr)) {
+  install.packages("transformr", repos = "http://cran.us.r-project.org")
+  require(transformr)
+}
+if (!require(dplyr)) {
+  install.packages("dplyr", repos = "http://cran.us.r-project.org")
+  require(dplyr)
+}
+shape_rs <- readOGR("Shapes/Municipios_IBGE.shp", "Municipios_IBGE",use_iconv=TRUE, encoding="UTF-8")
+```
+Now we check the cities that are not present in the IBGE dataset or if they have differences in comparison to the shapefile. We deal with this in the sequence.
+```R
+shape_rs@data$Label_N[!shape_rs@data$Label_N %in% milk_production_rs_cities$Cities]
+milk_production_rs_cities[239,1]<-"Maçambara"
+milk_production_rs_cities[342,1]<-"Restinga Seca"
+milk_production_rs_cities[369,1]<-"Santana do Livramento"
+milk_production_rs_cities[483,1]<-"Vespasiano Correa"
+milk_production_rs_cities[496,1]<-"Westfalia"
+```
+Now we will change the milk production data to millions of liters and change the dataset shape to a longer format.
+```R
+milk_production_rs_cities<-milk_production_rs_cities[order(milk_production_rs_cities$Cities),] 
+for(j in 2:ncol(milk_production_rs_cities)){
+     milk_production_rs_cities[,j]<-as.numeric(milk_production_rs_cities[,j])/1000
+}
+milk_production_rs_cities$id <- c(1:nrow(milk_production_rs_cities))
+milk_production_rs_cities <- reshape::melt(milk_production_rs_cities, id.vars=c("Cities","id"))
+```
+The IBGE dataset is ready to merge. Now we change the shapefile to dataframe type to use it in plot functions. And them we merge it with the dataset.
+```R
+shape_rs@data$id <- c(1:nrow(shape_rs@data))
+shapefile_df <- fortify(shape_rs, region = 'id') %>% mutate(id = as.numeric(id))
+shapefile_RS<-sp::merge(shapefile_df, shape_rs@data,by="id")
+map_data <- shapefile_RS %>% left_join(milk_production_rs_cities, by = c("Label_N" = "Cities"))
+colnames(map_data)[20]<-"year"
+map_data<-map_data[,-(14:17)]
+map_data<-map_data[,-(8:11)]
+```
+Now we check and correct if exists rows with missing values for milk production and turn the year colunm numeric.
+```R
+map_data[is.na(map_data$values),]
+map_data$year<-as.numeric(as.character(map_data$year))
+```
+Now we use the concept of *quantile* of statistics to discover the best partitions in the data to generate the ranges of intervals.
+```R
+quantile( milk_production_rs_cities$value[milk_production_rs_cities$variable==2017], p = (0:5)/5 )
+```
+We get the numbers of previous quantile function to generate the data ranges to insert in the legend.
+```R
+map_data$cat <- ifelse(map_data$value >= 14.063, 8, ifelse(map_data$value >= 8, 
+    7, ifelse(map_data$value >= 4.212, 6, ifelse(map_data$value >= 1.119, 5, ifelse(map_data$value >= 
+       0, 4, 4)))))
+map_data$cat <- factor(map_data$cat, levels = c(8:4), labels = c("14.60 - 62.91", "8.01 - 14.60", 
+    "4.21 - 8.00", "1.12 - 4.21", "0.00 - 1.12"))
+```
+Finally, we use ggplot and animate to generate the maps and the final animation.
+```R
+p <- ggplot() +
+    geom_polygon(data = map_data, aes(fill = cat,x = long, y = lat, group = group)) +
+    geom_path(data = map_data, aes(x = long, y = lat, group = group), color = "black", size = 0.1) +
+    coord_equal() +
+    theme(legend.position = "bottom") +
+    labs(x = NULL, y = NULL, 
+         title = "Milk Production in {round(frame_time,0)} ",
+         subtitle = "Rio Grande do Sul - Brazil",
+         caption = 'Source: IBGE, 2019') 
+p <- p + scale_fill_manual(
+    values = rev(colorRampPalette(brewer.pal(5, "Greens"))(5)),
+    name = "Milk Production (Millions of Liters) ",
+    drop = FALSE,
+    guide = guide_legend(
+        direction = "horizontal",
+        keyheight = unit(2, units = "mm"),keywidth = unit(35, units = "mm"),
+        title.position = 'top',
+        title.hjust = 0.5,
+        label.hjust = 0.5,
+        nrow = 1,
+        byrow = T,reverse = F,
+        label.position = "bottom"
+    )
+)
+p <- p + transition_time(year)
+animate(p, nframes=440, fps = 10, width = 1400, height = 900, renderer = gifski_renderer("gganim.gif", loop = FALSE)) +  ease_aes('cubic-in-out') 
+```
+
+![Alt text](figures/gif2.gif?raw=true "Title")
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
