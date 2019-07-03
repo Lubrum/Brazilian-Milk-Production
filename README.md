@@ -415,7 +415,7 @@ p <- p + scale_fill_manual(
     drop = FALSE,
     guide = guide_legend(
         direction = "horizontal",
-        keyheight = unit(4, units = "mm"),keywidth = unit(45, units = "mm"),
+        keyheight = unit(4, units = "mm"),keywidth = unit(40, units = "mm"),
         title.position = 'top',
         title.hjust = 0.5,
         label.hjust = 0.5,
@@ -425,7 +425,7 @@ p <- p + scale_fill_manual(
     )
 )
 p <- p + transition_time(year)
-animate(p, nframes=440, fps = 10, width = 1400, height = 900, renderer = gifski_renderer("gganim.gif", loop = FALSE)) +  ease_aes('cubic-in-out') 
+animate(p, nframes=220, fps = 10, width = 1400, height = 900, renderer = gifski_renderer("gganim.gif", loop = FALSE)) +  ease_aes('cubic-in-out') 
 ```
 
 ![Alt text](figures/gif2.gif?raw=true "Title")
