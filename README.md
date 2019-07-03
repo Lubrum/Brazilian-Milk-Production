@@ -316,7 +316,7 @@ text(-60.7,-27.9,"Variation Ranges",cex=.95)
 ![Alt text](figures/figure5.png.jpeg?raw=true "Title")
 
 ## Third Part
-Now, we will create an animated map, showing how the milk production behaved in all cities from Rio Grande do Sul state, from Brazil. First, we download the needed [Data](https://sidra.ibge.gov.br/tabela/74) and clean the data. You need to check the data yourself before the cleaning stage to see what is wrong with the spreadsheet. We import and clean the data first.
+Now, we will create an animated map, showing how the milk production behaved in all cities from Rio Grande do Sul state, from Brazil. First, we download the needed [Data](https://sidra.ibge.gov.br/tabela/74). You need to check the data yourself before the cleaning stage to see what is wrong with the spreadsheet. We import and clean the data first.
 ```R
 milk_production_rs_cities <- read.csv2('Planilhas/table74_rs_cities.csv', skip=3, stringsAsFactors = FALSE, encoding="UTF-8")
 milk_production_rs_cities<-milk_production_rs_cities[-(1:2),]
@@ -339,14 +339,6 @@ if (!require(rgdal)) {
 if (!require(RColorBrewer)) {
   install.packages("rgdal", repos = "http://cran.us.r-project.org")
   require(RColorBrewer)
-}
-if (!require(tweenr)) {
-  install.packages("tweenr", repos = "http://cran.us.r-project.org")
-  require(tweenr)
-}
-if (!require(transformr)) {
-  install.packages("transformr", repos = "http://cran.us.r-project.org")
-  require(transformr)
 }
 if (!require(dplyr)) {
   install.packages("dplyr", repos = "http://cran.us.r-project.org")
@@ -399,7 +391,7 @@ map_data$cat <- ifelse(map_data$value >= 14.063, 8, ifelse(map_data$value >= 8,
 map_data$cat <- factor(map_data$cat, levels = c(8:4), labels = c("14.60 - 62.91", "8.01 - 14.60", 
     "4.21 - 8.00", "1.12 - 4.21", "0.00 - 1.12"))
 ```
-Finally, we use ggplot and animate to generate the maps and the final animation.
+Finally, we use ggplot and animate to generate the maps and the final animation. There are a lot of tutorials showing how to make a animated map. You can check [here](https://dontfeedthefears.com/how-to-create-an-animated-map-in-r/#comment-15) how to create one.
 ```R
 p <- ggplot() +
     geom_polygon(data = map_data, aes(fill = cat,x = long, y = lat, group = group)) +
@@ -429,6 +421,8 @@ animate(p, nframes=220, fps = 10, width = 1400, height = 900, renderer = gifski_
 ```
 
 ![Alt text](figures/gif2.gif?raw=true "Title")
+
+And that's all. Later I will improve this analysis using more variables from IBGE to better know and show the reality of Milk Production.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
