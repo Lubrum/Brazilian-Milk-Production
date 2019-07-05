@@ -14,7 +14,7 @@ setwd("working_directory")
 ```
 To sucessfully read the csv file, we need to use the **skip** and **nrows** arguments of **read.csv2**. Also, the first row and colunm have not valuable information, so we can remove it from the dataframe. 
 ```R
-milk_production <- read.csv2('Planilhas/table74.csv',skip=3, nrows=3)
+milk_production <- read.csv2('spreadsheet/table74.csv',skip=3, nrows=3)
 milk_production <- milk_production[-1,-1]
 ```
 We need to clean the years, because it is a String, not Integer, and it is in format "X....". We also reshape our dataframe to use it in **plotly**, setting the rows as colunms and we will have only one colunm named "years". We need to use **as.numeric** and **as.character** to convert the data from **factor** to **numeric**.
@@ -59,7 +59,7 @@ if(!require(janitor)){
     install.packages("janitor")
     library(janitor)
 }
-milk_production_states <- read.csv2('Planilhas/table74_brazil.csv', skip=3, nrows=31, stringsAsFactors = FALSE, encoding="UTF-8")
+milk_production_states <- read.csv2('spreadsheet/table74_brazil.csv', skip=3, nrows=31, stringsAsFactors = FALSE, encoding="UTF-8")
 ```
 If we check the data, we will see a need for cleaning. That is what we do next.
 ```R
@@ -135,8 +135,8 @@ animate(anim, 880, fps = 44, width = 1600, height = 1200, renderer = gifski_rend
 Now, the second part of our exploratory analysis, we will get the number of dairy farms from Brazil in [2006](https://sidra.ibge.gov.br/tabela/6783) and [2017](https://sidra.ibge.gov.br/tabela/933).
 And them, we perform the same procedure that we did before with the milk production data. Note that **skip** and **nrows** arguments changed. Check the .csv file to notice the Diffs and what rows and colunms need to be removed.
 ```R
-properties_2006 <- read.csv2('Planilhas/table933.csv',skip=5, nrows=1)
-properties_2017 <- read.csv2('Planilhas/table6783.csv',skip=5, nrows=1)
+properties_2006 <- read.csv2('spreadsheet/table933.csv',skip=5, nrows=1)
+properties_2017 <- read.csv2('spreadsheet/table6783.csv',skip=5, nrows=1)
 properties_2006 <- properties_2006[,-(1:2)] #metadata removing
 properties_2017 <- properties_2017[,-1]     #metadata removing
 properties_2006 <- as.numeric(as.character(unlist(properties_2006[1,], use.names=FALSE)))
@@ -189,9 +189,9 @@ if(!require(sf)){
     install.packages("sf")
     library(sf)
 }
-shape_rs <- st_read('Shapes/Municipios_IBGE.shp')
-milk_production_2017_rs <- read.csv2('Planilhas/table6783_rs.csv', skip=5, stringsAsFactors = FALSE, encoding="UTF-8")
-milk_production_2006_rs <- read.csv2('Planilhas/table933_rs.csv', skip=5, stringsAsFactors = FALSE, encoding="UTF-8")
+shape_rs <- st_read('shape/Municipios_IBGE.shp')
+milk_production_2017_rs <- read.csv2('spreadsheet/table6783_rs.csv', skip=5, stringsAsFactors = FALSE, encoding="UTF-8")
+milk_production_2006_rs <- read.csv2('spreadsheet/table933_rs.csv', skip=5, stringsAsFactors = FALSE, encoding="UTF-8")
 ```
 After checking the data, we need to perform some cleaning to deal with missing values and strings.
 ```R
@@ -318,7 +318,7 @@ text(-60.7,-27.9,"Variation Ranges",cex=.95)
 ## Third Part
 Now, we will create an animated map, showing how the milk production behaved in all cities from Rio Grande do Sul state, from Brazil. First, we download the needed [Data](https://sidra.ibge.gov.br/tabela/74). You need to check the data yourself before the cleaning stage to see what is wrong with the spreadsheet. We import and clean the data first.
 ```R
-milk_production_rs_cities <- read.csv2('Planilhas/table74_rs_cities.csv', skip=3, stringsAsFactors = FALSE, encoding="UTF-8")
+milk_production_rs_cities <- read.csv2('spreadsheet/table74_rs_cities.csv', skip=3, stringsAsFactors = FALSE, encoding="UTF-8")
 milk_production_rs_cities<-milk_production_rs_cities[-(1:2),]
 milk_production_rs_cities<-milk_production_rs_cities[-(498:510),]
 colnames(milk_production_rs_cities) <- gsub("X",'',colnames(milk_production_rs_cities))
@@ -344,7 +344,7 @@ if (!require(dplyr)) {
   install.packages("dplyr", repos = "http://cran.us.r-project.org")
   require(dplyr)
 }
-shape_rs <- readOGR("Shapes/Municipios_IBGE.shp", "Municipios_IBGE",use_iconv=TRUE, encoding="UTF-8")
+shape_rs <- readOGR("shape/Municipios_IBGE.shp", "Municipios_IBGE",use_iconv=TRUE, encoding="UTF-8")
 ```
 Now we check the cities that are not present in the IBGE dataset or if they have differences in comparison to the shapefile. We deal with this in the sequence.
 ```R
