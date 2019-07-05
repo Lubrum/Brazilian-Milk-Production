@@ -99,7 +99,6 @@ staticplot = ggplot(milk_production_states_1, aes(rank, group = Brazilian_States
     geom_text(aes(y = 0, label = paste(Brazilian_States, " "), vjust = 0.2, hjust = 1, size = 6)) +
     geom_text(aes(y = value, label = Value_lbl, hjust = 0, size = 6)) +
     coord_flip(clip = "off", expand = FALSE) +
-    transition_reveal(year, reveal_time) +
     scale_y_continuous(labels = scales::comma) +
     scale_x_reverse() +
     guides(color = FALSE, fill = FALSE) +
