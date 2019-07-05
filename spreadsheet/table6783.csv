@@ -1,0 +1,32 @@
+﻿"Tabela 6783 - Número de estabelecimentos agropecuários com bovinos, Efetivos, Venda e Produção de leite, por grupos de área de pastagem e grupos de área total - resultados preliminares 2017"
+"Variável - Número de estabelecimentos agropecuários que produziram leite (Unidades)"
+"";"Ano x Grupos de área total x Grupos de área de pastagem"
+"";"2017"
+"";"Mais de 0 a menos de 0,1 ha";"De 0,1 a menos de 0,2 ha";"De 0,2 a menos de 0,5 ha";"De 0,5 a menos de 1 ha";"De 1 a menos de 2 ha";"De 2 a menos de 3 ha";"De 3 a menos de 4 ha";"De 4 a menos de 5 ha";"De 5 a menos de 10 ha";"De 10 a menos de 20 ha";"De 20 a menos de 50 ha";"De 50 a menos de 100 ha";"De 100 a menos de 200 ha";"De 200 a menos de 500 ha";"De 500 a menos de 1.000 ha";"De 1.000 a menos de 2.500 ha";"De 2.500 a menos de 10.000 ha";"De 10.000 ha e mais";"Produtor sem área"
+"";"Total";"Total";"Total";"Total";"Total";"Total";"Total";"Total";"Total";"Total";"Total";"Total";"Total";"Total";"Total";"Total";"Total";"Total";"Total"
+"Brasil";"1451";"1225";"3436";"9170";"26440";"34604";"37055";"40143";"155703";"242992";"316001";"145421";"79033";"49355";"15639";"8242";"2735";"321";"2224"
+"Fonte: IBGE - Censo Agropecuário"
+
+"Notas"
+"1 - As críticas qualitativa e quantitativa dos dados ainda não foram concluídas, razão pela qual os resultados ora apresentados são preliminares, estando, portanto, sujeitos a alterações posteriores."
+"2 - Dados relativos ao período (ano) de referência (1/10/2016 a 30/09/2017)."
+"3 - Número de cabeças de bovinos, de matrizes reprodutoras (2 anos e mais) e grupos de área relativos à data de referência (30/09/2017)."
+"4 - Os dados das Unidades Territoriais com menos de 3 (três) informantes estão desidentificados com o caracter X. "
+"5 - Os dados de outras Unidades Territoriais ou categorias podem ser desidentificados com o caracter X a fim de inibir inferência daqueles com menos de 3 (três) informantes."
+""
+"Legenda"
+"Símbolo";"Significado"
+"-";"Zero absoluto, não resultante de um cálculo ou arredondamento.
+Ex: Em determinado município não existem pessoas de 14 anos de idade sem instrução."
+"0";"Zero resultante de um cálculo ou arredondamento.
+Ex: A inflação do feijão em determinada Região Metropolitana foi 0.
+Determinado município produziu 400 kg de sementes de girassol e os dados da tabela são expressos em toneladas."
+"X";"Valor inibido para não identificar o informante.
+Ex: Determinado município só possui uma empresa produtora de cimento, logo o valor de sua produção deve ser inibido."
+"..";"Valor não se aplica.
+Ex: Não se pode obter o total da produção agrícola em determinado município quando os produtos agrícolas são contabilizados com unidades de medida distintas."
+"...";"Valor não disponível.
+Ex: A produção de feijão em determinado município não foi pesquisada ou determinado município não existia no ano da pesquisa."
+"A a Z
+(exceto X)";"Significa uma faixa de valores. Varia em função da tabela (se for o caso).
+Ex: O nível de precisão da produção estimada de combustíveis está na faixa A (95 a 100%)"

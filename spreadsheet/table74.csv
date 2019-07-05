@@ -1,0 +1,29 @@
+﻿"Tabela 74 - Produção de origem animal, por tipo de produto"
+"Variável - Produção de origem animal (Mil litros)"
+"Brasil e Unidade da Federação";"Ano x Tipo de produto de origem animal"
+"Brasil e Unidade da Federação";"1974";"1975";"1976";"1977";"1978";"1979";"1980";"1981";"1982";"1983";"1984";"1985";"1986";"1987";"1988";"1989";"1990";"1991";"1992";"1993";"1994";"1995";"1996";"1997";"1998";"1999";"2000";"2001";"2002";"2003";"2004";"2005";"2006";"2007";"2008";"2009";"2010";"2011";"2012";"2013";"2014";"2015";"2016";"2017"
+"Brasil e Unidade da Federação";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite";"Leite"
+"Brasil";"7101261";"7947382";"8256942";"9565637";"9782169";"10187228";"11162245";"11323967";"11461215";"11463018";"11932908";"12078398";"12491814";"12996496";"13521881";"14094857";"14484414";"15079187";"15784011";"15590882";"15783557";"16474365";"18515391";"18666011";"18693915";"19070048";"19767206";"20509953";"21642780";"22253863";"23474694";"24620859";"25398219";"26137266";"27585346";"29085495";"30715460";"32096214";"32304421";"34255236";"35124360";"34609588";"33656162";"33490810"
+"Rio Grande do Sul";"771689";"815718";"802465";"857684";"825562";"906173";"1236585";"1210253";"1249448";"1138397";"1144449";"1129134";"1188134";"1190784";"1342048";"1434949";"1451797";"1488140";"1600469";"1586462";"1626215";"1710677";"1860984";"1913125";"1914556";"1974663";"2102018";"2222054";"2329607";"2305758";"2364936";"2467630";"2625132";"2943684";"3314573";"3400179";"3633834";"3879455";"4049487";"4508518";"4687489";"4599925";"4613780";"4551601"
+"Fonte: IBGE - Pesquisa da Pecuária Municipal"
+
+"Notas"
+"1 - Os municípios sem informação para pelo menos um produto de origem animal não aparecem nas listas.
+2 - Os dados do último ano divulgado são RESULTADOS PRELIMINARES e podem sofrer alterações até a próxima divulgação."
+""
+"Legenda"
+"Símbolo";"Significado"
+"-";"Zero absoluto, não resultante de um cálculo ou arredondamento.
+Ex: Em determinado município não existem pessoas de 14 anos de idade sem instrução."
+"0";"Zero resultante de um cálculo ou arredondamento.
+Ex: A inflação do feijão em determinada Região Metropolitana foi 0.
+Determinado município produziu 400 kg de sementes de girassol e os dados da tabela são expressos em toneladas."
+"X";"Valor inibido para não identificar o informante.
+Ex: Determinado município só possui uma empresa produtora de cimento, logo o valor de sua produção deve ser inibido."
+"..";"Valor não se aplica.
+Ex: Não se pode obter o total da produção agrícola em determinado município quando os produtos agrícolas são contabilizados com unidades de medida distintas."
+"...";"Valor não disponível.
+Ex: A produção de feijão em determinado município não foi pesquisada ou determinado município não existia no ano da pesquisa."
+"A a Z
+(exceto X)";"Significa uma faixa de valores. Varia em função da tabela (se for o caso).
+Ex: O nível de precisão da produção estimada de combustíveis está na faixa A (95 a 100%)"
