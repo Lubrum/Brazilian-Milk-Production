@@ -206,7 +206,7 @@ for(i in 1:nrow(milk_production_2006_rs)){
     milk_production_2006_rs[i,1]<-gsub(" [(]RS[)]","",milk_production_2006_rs[i,1])
 }
 ```
-With the command **which** and **%in%** above, we check the cities that are not present in the samples of 2006 and 2017 or have Diffs comparing with the shapefile. We deal with this in the sequence.
+With the command **which** and **%in%** below, we check the cities that are not present in the samples of 2006 and 2017 or have Diffs comparing with the shapefile. We deal with this in the sequence.
 ```R
 shape_rs$Label_N[!shape_rs$Label_N %in% milk_production_2006_rs$Município]
 #Different cities names in 2006 dataset: Maçambara, Restinga Seca, Santana do Livramento, Vespasiano Colorrea, Westfalia.
