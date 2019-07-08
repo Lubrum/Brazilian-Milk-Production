@@ -433,6 +433,7 @@ text(-42,-26.6,
     )
 ```
 ![Alt text](figures/figure5_2.png.jpeg?raw=true "Title")
+
 And there we go. Now it is possible to verify that the milk production increased in most of the cities and the properties number decreased in most of the cities, all of this in the same period of time in Rio Grande do Sul.  
 ## Third Part
 Now, we will create an animated map, showing how the milk production behaved in all cities from Rio Grande do Sul state, from Brazil. First, we download the needed [Data](https://sidra.ibge.gov.br/tabela/74). You need to check the data yourself before the cleaning stage to see what is wrong with the spreadsheet. We import and clean the data first.
