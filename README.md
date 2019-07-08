@@ -323,7 +323,7 @@ text(-60.7,-27.9,
     )
 
 ```
-![Alt text](figures/figure5.png.jpeg?raw=true "Title")
+![Alt text](figures/figure5.png?raw=true "Title")
 
 Now we follow the almost same steps to verify how the properties number behaved in 2006-2017 period.
 
@@ -432,7 +432,7 @@ text(-42,-26.6,
     cex=.95
     )
 ```
-![Alt text](figures/figure5_2.png.jpeg?raw=true "Title")
+![Alt text](figures/figure5_2.png?raw=true "Title")
 
 And there we go. Now it is possible to verify that the milk production increased in most of the cities and the properties number decreased in most of the cities, all of this in the same period of time in Rio Grande do Sul.  
 ## Third Part
