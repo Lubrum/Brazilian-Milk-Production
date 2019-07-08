@@ -234,23 +234,17 @@ Now we merge the milk production datasets with the shapefile using the city name
 shape_rs<-sp::merge(shape_rs, milk_production_2017_rs,by.x="Label_N",by.y="City", all.x=T)
 shape_rs<-sp::merge(shape_rs, milk_production_2006_rs,by.x="Label_N",by.y="City", all.x=T)
 ```
-Now we check and correct the rows with missing values for milk production. We also convert this values to numeric.
+Now we correct the rows with missing values for milk production. We also convert this values to numeric.
 ```R
-shape_rs[is.na(shape_rs$Milk_2006),]
-shape_rs[is.na(shape_rs$Milk_2017),]
-shape_rs$Milk_2017[157]=0 #Esteio
-shape_rs$Milk_2006[31]=0 #Balneário Pinhal
-shape_rs$Milk_2006[88]=0 #Capivari do Sul
-shape_rs$Milk_2006[109]=0 #Cidreira
-shape_rs$Milk_2006[157]=0 #Esteio
-shape_rs$Milk_2006[318]<-0 #Pinto Bandeira
-shape_rs$Milk_2017<-as.numeric(shape_rs$Milk_2017)
-shape_rs$Milk_2006<-as.numeric(shape_rs$Milk_2006)
+shape_rs$Milk_2017 <- as.numeric(shape_rs$Milk_2017)
+shape_rs$Milk_2006 <- as.numeric(shape_rs$Milk_2006)
+shape_rs[is.na(shape_rs$Milk_2006), 13] <- 0
+shape_rs[is.na(shape_rs$Milk_2017), 12] <- 0
 ```
 Now we manually generate the percentual variation of milk production to each city. We also manually set a color and a string name to each range of percentual. Note that we could do much more here, analysing the distributions and use statistics to better choose the ranges. 
 ```R
 shape_rs$Diff<-shape_rs$Milk_2017-shape_rs$Milk_2006
-for(i in 1:496){
+for(i in 1:nrow(shape_rs)){
     if(shape_rs$Milk_2006[i]!=0){
         shape_rs$Percentual[i]<-(shape_rs$Milk_2017[i]-shape_rs$Milk_2006[i])/shape_rs$Milk_2006[i]
     }
@@ -258,7 +252,7 @@ for(i in 1:496){
         shape_rs$Percentual[i]<-100
     }
 }
-for(i in 1:496){
+for(i in 1:nrow(shape_rs)){
   if(shape_rs$Percentual[i]<(-0.5)){
     shape_rs$Color[i]<-"#800000"
     shape_rs$Range[i]<-"-100% <-> -50%"
@@ -308,12 +302,138 @@ if(!require(RColorBrewer)){
     install.packages("RColorBrewer")
     library(RColorBrewer)
 }
-plot(shape_rs$geometry,col = shape_rs$Color,axes = TRUE,bg='light blue',main="Milk Production Variation between 2006 and 2017")
-legend(-62,-28.5,legend=c(rev(unique(shape_rs$Range))),fill =c(rev(unique(shape_rs$Color))),bg = "gray",cex=0.9)
-text(-60.7,-27.9,"Variation Ranges",cex=.95)
+
+plot( shape_rs$geometry,
+      col = shape_rs$Color,
+      axes = TRUE,
+      bg='light blue',
+      main="Milk Production Variation between 2006 and 2017"
+    )
+
+legend(-62,-28.5,
+      legend = c(rev(unique(shape_rs$Range))),
+      fill = c(rev(unique(shape_rs$Color))),
+      bg = "gray",
+      cex=0.9
+      )
+
+text(-60.7,-27.9,
+    "Variation Ranges",
+    cex=.95
+    )
+
 ```
 ![Alt text](figures/figure5.png.jpeg?raw=true "Title")
 
+Now we follow the almost same steps to verify how the properties number behaved in 2006-2017 period.
+
+```R
+milk_properties_2006 <- read.csv('spreadsheet/table1227.csv', skip = 4, encoding="UTF-8", stringsAsFactors = FALSE, sep=';')
+milk_properties_2017 <- read.csv('spreadsheet/table6782.csv', skip = 4, encoding="UTF-8", stringsAsFactors = FALSE, sep=';')
+
+milk_properties_2006 <- milk_properties_2006[,-2]
+milk_properties_2006 <- milk_properties_2006[-(493:503),]
+milk_properties_2017 <- milk_properties_2017[,-2]
+milk_properties_2017 <- milk_properties_2017[-(497:511),]
+
+for(i in 1:nrow(milk_properties_2006)){
+    milk_properties_2006[i,2] <- gsub("X", '0', milk_properties_2006[i,2])
+    milk_properties_2006[i,1] <- gsub(" [(]RS[)]", "", milk_properties_2006[i,1])
+}
+
+for(i in 1:nrow(milk_properties_2017)){
+    milk_properties_2017[i,2] <- gsub("X", '0', milk_properties_2017[i,2])
+    milk_properties_2017[i,1] <- gsub(" [(]RS[)]", "", milk_properties_2017[i,1])
+}
+
+milk_properties_2017[368,1] <- "Santana do Livramento"
+milk_properties_2017[496,1] <- "Xangri-Lá"
+milk_properties_2006[364,1] <- "Santana do Livramento"
+milk_properties_2006[492,1] <- "Xangri-Lá"
+
+colnames(milk_properties_2006) <- c("City", "Properties_2006")
+colnames(milk_properties_2017) <- c("City", "Properties_2017")
+
+shape_rs <- sp::merge(shape_rs, milk_properties_2006, by.x="Label_N", by.y="City", all.x=T)
+shape_rs <- sp::merge(shape_rs, milk_properties_2017, by.x="Label_N", by.y="City", all.x=T)
+
+shape_rs$Properties_2006 <- as.numeric(shape_rs$Properties_2006)
+shape_rs$Properties_2017 <- as.numeric(shape_rs$Properties_2017)
+
+shape_rs[is.na(shape_rs$Properties_2006),18] <- 0
+shape_rs[is.na(shape_rs$Properties_2017),19] <- 0
+
+for(i in 1:nrow(shape_rs)){
+    if(shape_rs$Properties_2006[i] != 0){
+        shape_rs$Percentual_Properties[i] <- (shape_rs$Properties_2017[i] - shape_rs$Properties_2006[i]) / shape_rs$Properties_2006[i]
+    }
+    else{
+        shape_rs$Percentual_Properties[i] <- 100
+    }
+}
+
+for(i in 1:nrow(shape_rs)){
+    if(shape_rs$Percentual_Properties[i] < (-0.8)){
+        shape_rs$Color_Properties[i] <- "#600000"
+        shape_rs$Range_Properties[i] <- "-80% <-> -100%"
+    }
+    else{if(shape_rs$Percentual_Properties[i] < (-0.6)){
+        shape_rs$Color_Properties[i] <- "#990000"
+        shape_rs$Range_Properties[i] <- "-60% <-> -80%"
+    }
+    else{if(shape_rs$Percentual_Properties[i] < (-0.4)){
+        shape_rs$Color_Properties[i] <- "#CC4444"
+        shape_rs$Range_Properties[i] <- "-40% <-> -60%"
+    }
+    else{if(shape_rs$Percentual_Properties[i] < (-0.2)){
+        shape_rs$Color_Properties[i] <- "#FF967A"
+        shape_rs$Range_Properties[i] <- "-20% <-> -40%"
+    }
+    else{if(shape_rs$Percentual_Properties[i] < 0.0){
+        shape_rs$Color_Properties[i] <- "#FFC9CC"
+        shape_rs$Range_Properties[i] <- "-20% <-> 0%"
+    }
+    else{if(shape_rs$Percentual_Properties[i]<0.5){
+        shape_rs$Color_Properties[i]<-"#98FB98"
+        shape_rs$Range_Properties[i]<-"0% <-> 50%"
+    }
+    else{if(shape_rs$Percentual_Properties[i] < 1.0){
+        shape_rs$Color_Properties[i] <- "#2E8B57"
+        shape_rs$Range_Properties[i] <- "50% <-> 100%"
+    }
+    else{if(shape_rs$Percentual_Properties[i] == 100){
+        shape_rs$Color_Properties[i] <- "#FFFFFF"
+        shape_rs$Range_Properties[i] <- "Undetermined"
+    }
+    else{
+        shape_rs$Color_Properties[i] <- "#005000"
+        shape_rs$Range_Properties[i] <- "100% or more"
+    }
+}}}}}}}}
+
+shape_rs <- shape_rs[order(shape_rs$Percentual_Properties),]
+
+plot( shape_rs["Percentual_Properties"],
+      col = shape_rs$Color_Properties,
+      axes = TRUE,
+      bg = 'light blue',
+      main = "Milk Production Properties Variation between 2006 and 2017"
+    )
+
+legend( x = "topright",
+        legend = c(rev(unique(shape_rs$Range_Properties))),
+        fill = c(rev(unique(shape_rs$Color_Properties))),
+        bg = "gray",
+        cex = 0.7
+      )
+
+text(-42,-26.6,
+    "Variation Ranges",
+    cex=.95
+    )
+```
+![Alt text](figures/figure5_2.png.jpeg?raw=true "Title")
+And there we go. Now it is possible to verify that the milk production increased in most of the cities and the properties number decreased in most of the cities, all of this in the same period of time in Rio Grande do Sul.  
 ## Third Part
 Now, we will create an animated map, showing how the milk production behaved in all cities from Rio Grande do Sul state, from Brazil. First, we download the needed [Data](https://sidra.ibge.gov.br/tabela/74). You need to check the data yourself before the cleaning stage to see what is wrong with the spreadsheet. We import and clean the data first.
 ```R
