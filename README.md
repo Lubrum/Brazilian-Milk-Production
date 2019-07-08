@@ -323,7 +323,7 @@ text(-60.7,-27.9,
     )
 
 ```
-![Alt text](figures/figure5.png?raw=true "Title")
+![Alt text](figures/figure5.jpeg?raw=true "Title")
 
 Now we follow the almost same steps to verify how the properties number behaved in 2006-2017 period.
 
