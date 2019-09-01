@@ -432,7 +432,7 @@ labs(x = NULL,
      y = NULL, 
      title = "Milk Production Variation Between 2006 and 2017 in Rio Grande do Sul - Brazil ")
 ```
-![Alt text](figures/figure5.jpeg?raw=true "Title")
+![Alt text](figures/figure5.png?raw=true "Title")
 
 Now we follow the almost same steps to verify how the properties number behaved in 2006-2017 period.
 
