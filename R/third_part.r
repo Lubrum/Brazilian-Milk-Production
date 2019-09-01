@@ -61,7 +61,7 @@ colnames(map_data)[21] <- "milk_production"
 map_data <- map_data[,-(14:17)]
 map_data <- map_data[,-(8:11)]
 
-map_data[is.na(map_data$values),]
+map_data[is.na(map_data$milk_production),]
 map_data$year <- as.numeric(as.character(map_data$year))
 
 quantile( milk_production_rs_cities$value[milk_production_rs_cities$variable==2017], p = (0:5)/5 )

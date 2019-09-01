@@ -607,7 +607,7 @@ map_data<-map_data[,-(8:11)]
 ```
 Now we check and correct if exists rows with missing values for milk production and turn the year colunm numeric.
 ```R
-map_data[is.na(map_data$values),]
+map_data[is.na(map_data$milk_production),]
 map_data$year <- as.numeric(as.character(map_data$year))
 ```
 Now we use the concept of *quantile* of statistics to discover the best partitions in the data to generate the ranges of intervals.
