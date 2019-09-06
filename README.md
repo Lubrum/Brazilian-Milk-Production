@@ -72,7 +72,7 @@ if(!require(tidyverse)) install.packages('tidyverse')
 
 milk_production_states <- read.csv2('spreadsheet/table74_brazil.csv', skip = 3, nrows = 31, stringsAsFactors = FALSE, encoding = "UTF-8")
 ```
-If we check the data, we will see a need for cleaning. That is what we do next.
+If we check the data, we will see a need for cleaning. That is what we do next. We also add the Region information for each Brazilian State.
 ```R
 milk_production_states <- milk_production_states[-(1:2),]
 milk_production_states <- milk_production_states[-29,]
@@ -82,6 +82,13 @@ for(i in 2:ncol(milk_production_states)){
         milk_production_states[,i] <- gsub("[...]", '0', milk_production_states[,i])
         milk_production_states[,i] <- as.numeric(as.character(unlist(milk_production_states[,i])))
 }
+
+milk_production_states <- milk_production_states[-20,]
+milk_production_states
+
+Regions <- c(rep("N", 7), rep("NE", 9), rep("SE", 4), rep("S", 3), rep("MW", 4))
+milk_production_states <- cbind(milk_production_states, Regions)
+milk_production_states
 ```
 The next part is the data processing to create the animated bar plots. The method is based on this [Tutorial](https://towardsdatascience.com/create-animated-bar-charts-using-r-31d09e5841da), from [Towards Data Science](https://towardsdatascience.com/). Go there for more information about it.
 ```R
@@ -102,13 +109,13 @@ library(gganimate)
 if(!require(gifski)) install.packages('gifski')
 library(gifski)
 
-staticplot = ggplot(milk_production_states_1, aes(rank)) +
+staticplot = ggplot(milk_production_states_1, aes(x = rank, group = Regions)) +
     geom_tile(aes(y = value / 2, height = value, width = 0.9, fill = as.factor(Regions)), alpha = 0.8) +
     geom_text(aes(y = value, label = Brazilian_States, size = 5, position = position_nudge(y = -300000))) +
     geom_text(aes(y = value, label = as.character(Value_lbl)), size = 7, position = position_nudge(y = 250000)) +
     coord_flip(clip = "off", expand = FALSE) +
     scale_x_reverse() +
-    guides(color = FALSE, fill = FALSE) +
+    labs(fill = "Region") +
 theme(legend.position = "right",
       legend.key.width = unit(3, "cm"),
       legend.key.size = unit(3, "cm"),
@@ -135,7 +142,7 @@ anim = staticplot +
        subtitle = "Top 10 States",
        caption = "Milk Production in Brazilian States in Billions of Liters | Source: Brazilian Institute of Statistics and Geography.")
 
-animate(anim, 880, fps = 44, width = 1600, height = 1200, renderer = gifski_renderer("gganim.gif", loop = FALSE)) +  ease_aes('cubic-in-out') 
+animate(anim, 880, fps = 44, width = 1700, height = 1000, renderer = gifski_renderer("gganim.gif", loop = FALSE)) +  ease_aes('cubic-in-out') 
 ```
 ![Alt text](figures/gif1.gif?raw=true "Title")
 
@@ -294,7 +301,7 @@ layout(showlegend = FALSE,
                     title = "Range of property size (hectares). *N.I (Not Informed)"),
        font = list(size = 11))
 subplot(b, c, titleX = TRUE, titleY = TRUE, margin = c(0.035,0,0,0.8)) %>% 
-layout(title = "Brazilian Dairy Properties Variation between 2006 and 2017")
+layout(title = "Dairy Properties Variation between 2006 and 2017 in RS")
 ```
 ![Alt text](figures/figure4.png?raw=true "Title")
 

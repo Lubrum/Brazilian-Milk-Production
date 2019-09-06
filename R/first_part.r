@@ -54,6 +54,13 @@ for(i in 2:ncol(milk_production_states)){
         milk_production_states[,i] <- as.numeric(as.character(unlist(milk_production_states[,i])))
 }
 
+milk_production_states <- milk_production_states[-20,]
+milk_production_states
+
+Regions <- c(rep("N", 7), rep("NE", 9), rep("SE", 4), rep("S", 3), rep("MW", 4))
+milk_production_states <- cbind(milk_production_states, Regions)
+milk_production_states
+
 milk_production_states <- milk_production_states %>% 
                           gather(year, value, 2:45) 
 milk_production_states$year <- as.numeric(milk_production_states$year)
@@ -71,40 +78,41 @@ library(gganimate)
 if(!require(gifski)) install.packages('gifski')
 library(gifski)
 
-staticplot = ggplot(milk_production_states_1, aes(rank)) +
-    geom_tile(aes(y = value / 2, height = value, width = 0.9, fill = as.factor(Regions)), alpha = 0.8) +
-    geom_text(aes(y = value, label = Brazilian_States, size = 5, position = position_nudge(y = -300000))) +
-    geom_text(aes(y = value, label = as.character(Value_lbl)), size = 7, position = position_nudge(y = 250000)) +
-    coord_flip(clip = "off", expand = FALSE) +
-    scale_x_reverse() +
-    guides(color = FALSE, fill = FALSE) +
-theme(legend.position = "right",
-      legend.key.width = unit(3, "cm"),
-      legend.key.size = unit(3, "cm"),
-      legend.title = element_text(hjust = 0.5, size = 20),
-      legend.text = element_text(size = 18),
-      axis.text.x = element_blank(),
-      axis.text.y = element_blank(),
-      axis.ticks = element_blank(),
-      axis.title.x = element_blank(),
-      axis.title.y = element_blank(),
-      panel.background = element_blank(),
-      plot.background = element_blank(),
-      panel.grid.major.y = element_blank(),
-      panel.border = element_blank(),
-      panel.grid.minor.x = element_line(size =.1, color = "grey" ),
-      plot.title = element_text(size = 20, hjust = 0.5, face = "bold", colour = "black"),
-      plot.subtitle = element_text(size = 14, hjust = 0.5, face = "italic", color = "black"),
-      plot.caption = element_text(size = 15, hjust = 0.5, face = "italic", color = "black"))
+staticplot <- ggplot(milk_production_states_1, aes(x = rank, group = Regions)) +
+  geom_tile(aes(y = value / 2 , height = value, width = 0.9, fill = as.factor(Regions)), alpha = 0.9) +
+  geom_text(aes(y = value, label = Brazilian_States), size = 5, nudge_y = -300000) +
+  geom_text(aes(y = value, label = as.character(Value_lbl)), size = 7, nudge_y = 250000) +
+  coord_flip(clip = "off", expand = FALSE) +
+  scale_x_reverse() +
+  labs(fill = "Region") +
+  theme(legend.position = "right",
+        legend.key.width = unit(3, "cm"),
+        legend.key.size = unit(3, "cm"),
+        legend.title = element_text(hjust = 0.5, size = 20),
+        legend.text = element_text(size = 18),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        panel.background = element_blank(),
+        plot.background = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.border = element_blank(),
+        panel.grid.minor.x = element_line(size =.1, color = "grey" ),
+        plot.title = element_text(size = 20, hjust = 0.5, face = "bold", colour = "black"),
+        plot.subtitle = element_text(size = 14, hjust = 0.5, face = "italic", color = "black"),
+        plot.caption = element_text(size = 15, hjust = 0.5, face = "italic", color = "black"))
 
-anim = staticplot + 
-       transition_time(year)+
-       view_follow(fixed_x = TRUE)  +
-       labs(title = 'Milk Production in Brazilian States (Billions of Liters): {round(frame_time)}',  
+anim <- staticplot + 
+  transition_time(year) + 
+  view_follow(fixed_x = TRUE)  +
+  labs(title = 'Milk Production in Brazilian States (Billions of Liters): {round(frame_time)}',  
        subtitle = "Top 10 States",
        caption = "Milk Production in Brazilian States in Billions of Liters | Source: Brazilian Institute of Statistics and Geography.")
 
-animate(anim, 880, fps = 44, width = 1600, height = 1200, renderer = gifski_renderer("gganim.gif", loop = FALSE)) +  ease_aes('cubic-in-out') 
+animate(anim, 880, fps = 44, width = 1700, height = 1000, renderer = gifski_renderer("gganim1111.gif", loop = FALSE)) +
+  ease_aes('cubic-in-out') 
 
 properties_2006 <- read.csv2('spreadsheet/table933.csv',skip = 5, nrows = 1)
 properties_2017 <- read.csv2('spreadsheet/table6783.csv',skip = 5, nrows = 1)
