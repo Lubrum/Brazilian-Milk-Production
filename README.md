@@ -159,8 +159,8 @@ properties_2017 <- as.numeric(as.character(unlist(properties_2017[1,])))
 Now, with the **NROW** command, we noticed that we have not the same number of samples in 2006 and 2017. We saw that properties from 2017 had one range more than 2006 (the 2500-10000 hectares). So we add the two last samples and merged into one.
 ```R
 NROW(properties_2006) == NROW(properties_2017)
-properties_2017[18] <- properties_2017[18] + properties_2017[19] 
-properties_2017 <- properties_2017[-19] 
+properties_2017[17] <- properties_2017[17] + properties_2017[18] 
+properties_2017 <- properties_2017[-18] 
 ```
 Now we manually create two lists, one with the ranges of property area (in hectares) and the other is just a sequence of integers to sort the ranges properly in the graphics.
 ```R
@@ -311,9 +311,9 @@ Here we will analyse how the milk production and the number of milk farms behave
 if (!require(rgdal)) install.packages("rgdal", repos = "http://cran.us.r-project.org")
 library(rgdal)
 
-shape_rs <- readOGR('../shape/Municipios_IBGE.shp', use_iconv = TRUE, encoding = "utf8")
-milk_production_2017_rs <- read.csv('../spreadsheet/table6783_rs.csv', skip = 5, stringsAsFactors = FALSE, encoding = "UTF-8", sep = ';')
-milk_production_2006_rs <- read.csv2('../spreadsheet/table933_rs.csv', skip = 5, stringsAsFactors = FALSE, encoding = "UTF-8")
+shape_rs <- readOGR('shape/Municipios_IBGE.shp', use_iconv = TRUE, encoding = "utf8")
+milk_production_2017_rs <- read.csv('spreadsheet/table6783_rs.csv', skip = 5, stringsAsFactors = FALSE, encoding = "UTF-8", sep = ';')
+milk_production_2006_rs <- read.csv2('spreadsheet/table933_rs.csv', skip = 5, stringsAsFactors = FALSE, encoding = "UTF-8")
 ```
 After checking the data, we need to perform some cleaning to deal with missing values and strings.
 ```R
@@ -414,7 +414,7 @@ geom_polygon(data = map_data,
              aes(fill = cat,
                  x = long, 
                  y = lat,
-                 group = group) 
+                 group = group), 
              color = "black", 
              size = 0.1) +
 scale_fill_manual(values = c("#800000", "#FF0000", "#FFA07A", "#98FB98", "#11DD7F", "#3CB371", "#2E8B57", "#008000", "#005000", "#FFFFFF"),
@@ -514,7 +514,7 @@ geom_polygon(data = map_data,
              aes(fill = catprop,
                  x = long, 
                  y = lat,
-                 group = group)
+                 group = group),
              color = "black", 
              size = 0.1) +
 scale_fill_manual(values = c("#600000","#990000", "#CC4444", "#FF967A", "#FFC9CC", "#11EE7F", "#3CB371", "#005000", "#FFFFFF"),

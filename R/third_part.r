@@ -1,4 +1,4 @@
-milk_production_rs_cities <- read.csv2('spreadsheet/table74_rs_cities.csv', skip = 3, stringsAsFactors = FALSE, encoding = "UTF-8")
+milk_production_rs_cities <- read.csv2('../spreadsheet/table74_rs_cities.csv', skip = 3, stringsAsFactors = FALSE, encoding = "UTF-8")
 
 milk_production_rs_cities <- milk_production_rs_cities[-(1:2),]
 milk_production_rs_cities <- milk_production_rs_cities[-(498:510),]
@@ -34,7 +34,7 @@ require(gifski)
 if(!require(transformr)) install.packages('transformr')
 require(transformr)
 
-shape_rs <- readOGR("shape/Municipios_IBGE.shp", "Municipios_IBGE", use_iconv = TRUE, encoding = "UTF-8")
+shape_rs <- readOGR("../shape/Municipios_IBGE.shp", "Municipios_IBGE", use_iconv = TRUE, encoding = "UTF-8")
 
 shape_rs@data$Label_N[!shape_rs@data$Label_N %in% milk_production_rs_cities$Cities]
 milk_production_rs_cities[239,1] <- "Maçambara"

@@ -1,4 +1,4 @@
-milk_production <- read.csv2('spreadsheet/table74.csv', skip = 3, nrows = 3)
+milk_production <- read.csv2('../spreadsheet/table74.csv', skip = 3, nrows = 3)
 milk_production <- milk_production[-1,-1]
 
 colnames(milk_production) <- gsub("X", '', colnames(milk_production))
@@ -44,7 +44,7 @@ layout(xaxis = labelx, yaxis = labely)
 if(!require(tidyverse)) install.packages('tidyverse')
 library(tidyverse)
 
-milk_production_states <- read.csv2('spreadsheet/table74_brazil.csv', skip = 3, nrows = 31, stringsAsFactors = FALSE, encoding = "UTF-8")
+milk_production_states <- read.csv2('../spreadsheet/table74_brazil.csv', skip = 3, nrows = 31, stringsAsFactors = FALSE, encoding = "UTF-8")
 milk_production_states <- milk_production_states[-(1:2),]
 milk_production_states <- milk_production_states[-29,]
 colnames(milk_production_states) <- gsub("X", '', colnames(milk_production_states))
@@ -114,16 +114,16 @@ anim <- staticplot +
 animate(anim, 880, fps = 44, width = 1700, height = 1000, renderer = gifski_renderer("gganim1111.gif", loop = FALSE)) +
   ease_aes('cubic-in-out') 
 
-properties_2006 <- read.csv2('spreadsheet/table933.csv',skip = 5, nrows = 1)
-properties_2017 <- read.csv2('spreadsheet/table6783.csv',skip = 5, nrows = 1)
+properties_2006 <- read.csv2('../spreadsheet/table933.csv',skip = 5, nrows = 1)
+properties_2017 <- read.csv2('../spreadsheet/table6783.csv',skip = 5, nrows = 1)
 properties_2006 <- properties_2006[,-(1:2)] 
 properties_2017 <- properties_2017[,-1]     
 properties_2006 <- as.numeric(as.character(unlist(properties_2006[1,])))
 properties_2017 <- as.numeric(as.character(unlist(properties_2017[1,])))
 
 NROW(properties_2006) == NROW(properties_2017)
-properties_2017[18] <- properties_2017[18] + properties_2017[19] 
-properties_2017 <- properties_2017[-19] 
+properties_2017[17] <- properties_2017[17] + properties_2017[18] 
+properties_2017 <- properties_2017[-18] 
 
 properties_range <- c("0-0,1", "0,1-0,2", "0,2-0,5", "0,5-1", "1-2", "2-3", "3-4", "4-5", "5-10", "10-20", "20-50", "50-100", "100-200", "200-500", "500-1000", "1000-2500", "2500+", "NA")
 sequence <- seq(1,18)

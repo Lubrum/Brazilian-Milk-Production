@@ -90,7 +90,7 @@ geom_polygon(data = map_data,
              aes(fill = cat,
                  x = long, 
                  y = lat,
-                 group = group)
+                 group = group),
              color = "black", 
              size = 0.1) +
 scale_fill_manual(values = c("#800000", "#FF0000", "#FFA07A", "#98FB98", "#11DD7F", "#3CB371", "#2E8B57", "#008000", "#005000", "#FFFFFF"),
@@ -115,8 +115,8 @@ labs(x = NULL,
      y = NULL, 
      title = "Milk Production Variation Between 2006 and 2017 in Rio Grande do Sul - Brazil ")
 
-milk_properties_2006 <- read.csv('spreadsheet/table1227.csv', skip = 4, encoding = "UTF-8", stringsAsFactors = FALSE, sep=';')
-milk_properties_2017 <- read.csv('spreadsheet/table6782.csv', skip = 4, encoding = "UTF-8", stringsAsFactors = FALSE, sep=';')
+milk_properties_2006 <- read.csv('../spreadsheet/table1227.csv', skip = 4, encoding = "UTF-8", stringsAsFactors = FALSE, sep=';')
+milk_properties_2017 <- read.csv('../spreadsheet/table6782.csv', skip = 4, encoding = "UTF-8", stringsAsFactors = FALSE, sep=';')
 
 milk_properties_2006 <- milk_properties_2006[, -2]
 milk_properties_2006 <- milk_properties_2006[-(493:503),]
@@ -185,7 +185,7 @@ geom_polygon(data = map_data,
              aes(fill = catprop,
                  x = long, 
                  y = lat,
-                 group = group)
+                 group = group),
              color = "black", 
              size = 0.1) +
 scale_fill_manual(values = c("#600000","#990000", "#CC4444", "#FF967A", "#FFC9CC", "#11EE7F", "#3CB371", "#005000", "#FFFFFF"),
