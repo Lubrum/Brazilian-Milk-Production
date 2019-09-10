@@ -66,11 +66,11 @@ map_data$year <- as.numeric(as.character(map_data$year))
 
 quantile( milk_production_rs_cities$value[milk_production_rs_cities$variable==2017], p = (0:5)/5 )
 
-map_data$cat <- ifelse(map_data$value >= 14.063, 8, 
-                ifelse(map_data$value >= 8, 7, 
-                ifelse(map_data$value >= 4.212, 6, 
-                ifelse(map_data$value >= 1.119, 5, 
-                ifelse(map_data$value >= 0, 4, 4)))))
+map_data$cat <- ifelse(map_data$milk_production >= 14.063, 8, 
+                ifelse(map_data$milk_production >= 8, 7, 
+                ifelse(map_data$milk_production >= 4.212, 6, 
+                ifelse(map_data$milk_production >= 1.119, 5, 
+                ifelse(map_data$milk_production >= 0, 4, 4)))))
 
 map_data$cat <- factor(map_data$cat, levels = c(8:4), labels = c("14.60 - 62.91", "8.01 - 14.60", "4.21 - 8.00", "1.12 - 4.21", "0.00 - 1.12"))
 
@@ -104,4 +104,4 @@ p <- ggplot() +
                                            label.position = "bottom")) + 
     transition_time(year)
 
-animate(p, nframes = 220, fps = 10, width = 1400, height = 900, renderer = gifski_renderer("gganim.gif", loop = FALSE)) +  ease_aes('cubic-in-out')
+animate(p, nframes = 220, fps = 10, width = 1500, height = 1200, renderer = gifski_renderer("gganimsss.gif")) +  ease_aes('cubic-in-out')
