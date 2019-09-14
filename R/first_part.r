@@ -145,14 +145,14 @@ layout(yaxis = list(showgrid = TRUE,
                     showticklabels = TRUE, 
                     showgrid = TRUE,
                     title = "Variation in Number of Dairy Farms (thousands)"),
-       font = list(size = 8)) %>% 
+       font = list(size = 16)) %>% 
 add_annotations(xref = 'x1', 
                 yref = 'y',
                 x = (properties_2017 - properties_2006) / 1000,  
                 y = properties_range, 
                 text = paste(round((properties_2017-properties_2006)/1000, 0), 'k'),
                 font = list(family = 'Arial', 
-                            size = 8, 
+                            size = 16, 
                             color = 'rgb(0, 0, 0)'),
                 showarrow = FALSE)
 
@@ -173,14 +173,14 @@ layout(yaxis = list(showgrid = TRUE,
                     showticklabels = TRUE, 
                     showgrid = TRUE, 
                     title = "Percentual Variation of Dairy Farms (%)"),
-       font = list(size = 8)) %>% 
+       font = list(size = 16)) %>% 
 add_annotations(xref = 'x1', 
                 yref = 'y',
                 x = ((properties_2017 - properties_2006) / properties_2006) * 100,  
                 y = properties_range, 
                 text = paste(round(((properties_2017 - properties_2006) / properties_2006) * 100, 2), '%'),
                 font = list(family = 'Arial', 
-                            size = 8, 
+                            size = 16, 
                             color = 'rgb(0, 0, 0)'),
                 showarrow = FALSE)
 
