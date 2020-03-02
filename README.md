@@ -32,7 +32,7 @@ l2 <- lm(data$rs_milk / 1000000 ~ years, data = data)
 ```
 Now we use the **plotly** function. First, we need to install and import the library and its dependences.
 ```R
-if(!require(plotly)){ install.packages('plotly')
+if(!require(plotly)) install.packages('plotly')
 library(plotly)
 
 font1 <- list(family = "Arial, sans-serif", size = 22, color = "black")
@@ -67,8 +67,8 @@ layout(xaxis = labelx, yaxis = labely)
 We can get the milk production data of all states from Brazil and create an animated bar chart race. First we load the needed packages and load the [Data](https://sidra.ibge.gov.br/tabela/74).
 ```R
 if(!require(tidyverse)) install.packages('tidyverse')
-    library(tidyverse)
-}
+library(tidyverse)
+
 
 milk_production_states <- read.csv2('spreadsheet/table74_brazil.csv', skip = 3, nrows = 31, stringsAsFactors = FALSE, encoding = "UTF-8")
 ```
@@ -308,7 +308,7 @@ layout(title = "Dairy Properties Variation between 2006 and 2017 in RS")
 ## Second Part
 Here we will analyse how the milk production and the number of milk farms behaved in 2006-2017 period in all RS state from Brazil. First, we get the milk production data from [2006](https://sidra.ibge.gov.br/tabela/933) and [2017](https://sidra.ibge.gov.br/tabela/6783) by cities. Be sure to select data by cities of RS state only. We also need the shapefile with the cities of RS to plot maps. The shapefile of RS state can be found [Here](http://www.fepam.rs.gov.br/biblioteca/geo/bases_geo.asp).
 ```R
-if (!require(rgdal)) install.packages("rgdal", repos = "http://cran.us.r-project.org")
+if (!require(rgdal)) install.packages("rgdal")
 library(rgdal)
 
 shape_rs <- readOGR('shape/Municipios_IBGE.shp', use_iconv = TRUE, encoding = "utf8")
@@ -366,7 +366,7 @@ library(ggplot2)
 
 shape_rs@data$id <- c(1:nrow(shape_rs@data))
 shapefile_df <- fortify(shape_rs, region = 'id') %>% mutate(id = as.numeric(id))
-shapefile_RS <- sp::merge(shapefile_df, shape_rs@data,by="id")
+shapefile_RS <- sp::merge(shapefile_df, shape_rs@data, by = "id")
 
 map_data <- shapefile_RS %>% left_join(milk_production_2006_rs, by = c("Label_N" = "City"))
 map_data <- map_data %>% left_join(milk_production_2017_rs, by = c("Label_N" = "City"))
@@ -560,26 +560,26 @@ for(i in 2:ncol(milk_production_rs_cities)){
 ```
 We load some needed packages to plot animated maps and load the shapefile from RS cities.
 ```R
-if (!require(rgdal)) install.packages("rgdal", repos = "http://cran.us.r-project.org")
-require(rgdal)
+if (!require(rgdal)) install.packages("rgdal")
+library(rgdal)
 
-if (!require(RColorBrewer)) install.packages("rgdal", repos = "http://cran.us.r-project.org")
-require(RColorBrewer)
+if (!require(RColorBrewer)) install.packages("rgdal")
+library(RColorBrewer)
 
-if (!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
-require(dplyr)
+if (!require(dplyr)) install.packages("dplyr")
+library(dplyr)
 
-if (!require(ggplot2)) install.packages("ggplot2", repos = "http://cran.us.r-project.org")
-require(ggplot2)
+if (!require(ggplot2)) install.packages("ggplot2")
+library(ggplot2)
 
-if (!require(gganimate)) install.packages("gganimate", repos = "http://cran.us.r-project.org")
-require(gganimate)
+if (!require(gganimate)) install.packages("gganimate")
+library(gganimate)
 
 if (!require(gifski)) install.packages("gifski")
-require(gifski)
+library(gifski)
 
 if(!require(transformr)) install.packages('transformr')
-require(transformr)
+library(transformr)
 
 shape_rs <- readOGR("shape/Municipios_IBGE.shp", "Municipios_IBGE", use_iconv=TRUE, encoding = "UTF-8")
 ```

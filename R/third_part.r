@@ -1,4 +1,4 @@
-milk_production_rs_cities <- read.csv2('../spreadsheet/table74_rs_cities.csv', skip = 3, stringsAsFactors = FALSE, encoding = "UTF-8")
+milk_production_rs_cities <- read.csv2('spreadsheet/table74_rs_cities.csv', skip = 3, stringsAsFactors = FALSE, encoding = "UTF-8")
 
 milk_production_rs_cities <- milk_production_rs_cities[-(1:2),]
 milk_production_rs_cities <- milk_production_rs_cities[-(498:510),]
@@ -13,28 +13,34 @@ for(i in 2:ncol(milk_production_rs_cities)){
         milk_production_rs_cities[, i] <- as.numeric(as.character(unlist(milk_production_rs_cities[, i])))
 }
 
-if (!require(rgdal)) install.packages("rgdal", repos = "http://cran.us.r-project.org")
-require(rgdal)
+if (!require(rgdal)) install.packages("rgdal")
+library(rgdal)
 
-if (!require(RColorBrewer)) install.packages("rgdal", repos = "http://cran.us.r-project.org")
-require(RColorBrewer)
+if (!require(RColorBrewer)) install.packages("RColorBrewer")
+library(RColorBrewer)
 
-if (!require(dplyr)) install.packages("dplyr", repos = "http://cran.us.r-project.org")
-require(dplyr)
+if (!require(dplyr)) install.packages("dplyr")
+library(dplyr)
 
-if (!require(ggplot2)) install.packages("ggplot2", repos = "http://cran.us.r-project.org")
-require(ggplot2)
+if (!require(ggplot2)) install.packages("ggplot2")
+library(ggplot2)
 
-if (!require(gganimate)) install.packages("gganimate", repos = "http://cran.us.r-project.org")
-require(gganimate)
+if (!require(gganimate)) install.packages("gganimate")
+library(gganimate)
 
 if (!require(gifski)) install.packages("gifski")
-require(gifski)
+library(gifski)
 
 if(!require(transformr)) install.packages('transformr')
-require(transformr)
+library(transformr)
 
-shape_rs <- readOGR("../shape/Municipios_IBGE.shp", "Municipios_IBGE", use_iconv = TRUE, encoding = "UTF-8")
+if(!require(reshape)) install.packages('reshape')
+library(reshape)
+
+if(!require(av)) install.packages("av")
+library(av)
+
+shape_rs <- readOGR("shape/Municipios_IBGE.shp", "Municipios_IBGE", use_iconv = TRUE, encoding = "UTF-8")
 
 shape_rs@data$Label_N[!shape_rs@data$Label_N %in% milk_production_rs_cities$Cities]
 milk_production_rs_cities[239,1] <- "Maçambara"
@@ -104,4 +110,6 @@ p <- ggplot() +
                                            label.position = "bottom")) + 
     transition_time(year)
 
-animate(p, nframes = 220, fps = 10, width = 1500, height = 1200, renderer = gifski_renderer("gganimsss.gif")) +  ease_aes('cubic-in-out')
+animate(p, nframes = 220, fps = 10, width = 1500, height = 1200, renderer = av_renderer('animation.mp4'))+  ease_aes('cubic-in-out')
+
+animate(p, nframes = 55, fps = 10, width = 1500, height = 1200, renderer = gifski_renderer("gganimsss.gif")) +  ease_aes('cubic-in-out')

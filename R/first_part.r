@@ -111,6 +111,8 @@ anim <- staticplot +
        subtitle = "Top 10 States",
        caption = "Milk Production in Brazilian States in Billions of Liters | Source: Brazilian Institute of Statistics and Geography.")
 
+animate(anim, width = 1700, height = 1000 ,nframes = 880, fps = 44, renderer = av_renderer('animation.mp4'))
+
 animate(anim, 880, fps = 44, width = 1700, height = 1000, renderer = gifski_renderer("gganim1111.gif", loop = FALSE)) +
   ease_aes('cubic-in-out') 
 
@@ -166,7 +168,7 @@ plot_ly(x = ((properties_2017 - properties_2006) / properties_2006) * 100,
 layout(yaxis = list(showgrid = TRUE, 
                     showline = FALSE, 
                     showticklabels = TRUE, 
-                    domain= c(0, 0.85), 
+                    domain = c(0, 0.85), 
                     title = "Range of property size (hectares)"), 
        xaxis = list(zeroline = FALSE, 
                     showline = FALSE, 
@@ -255,14 +257,3 @@ layout(showlegend = FALSE,
        font = list(size = 11))
 subplot(b, c, titleX = TRUE, titleY = TRUE, margin = c(0.035,0,0,0.8)) %>% 
 layout(title = "Brazilian Dairy Properties Variation between 2006 and 2017")
-
-
-
-
-
-
-
-
-
-
-

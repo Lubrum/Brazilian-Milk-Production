@@ -1,4 +1,4 @@
-if (!require(rgdal)) install.packages("rgdal", repos = "http://cran.us.r-project.org")
+if (!require(rgdal)) install.packages("rgdal")
 library(rgdal)
 
 shape_rs <- readOGR('../shape/Municipios_IBGE.shp', use_iconv = TRUE, encoding = "utf8")
