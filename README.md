@@ -8,13 +8,14 @@ The content of this project can be found in this [Expanded Resume](http://public
 The first step is to get the data about the dairy milk production to perform the analysis. 
 In Brazil, we can get this specific data here (https://sidra.ibge.gov.br/tabela/74). Here, we select just "Milk production", all years from the historic and the region units "Brazil" and "Rio Grande do Sul". The reason is that we will perform an exploratory analysis with all historic data from milk production in Rio Grande do Sul state and Brazil. You can download the data and specify the file format. In this case, we will choose the .csv (BR). Save this file in the same folder where you will create your R project.
 From here we have two alternatives: you can manually open the csv file and remove some useless metadata or you can use the own R language to clean this data. For automation purpose, we will follow the second option.
-Open your RStudio or other IDE with R language. Set you directory as the working directory with the RStudio or you can do this using:
+Open your RStudio or other IDE with R language. Set the R code path as the working directory with the RStudio or you can do this using:
 ```R
-setwd("working_directory")
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 ```
 To sucessfully read the csv file, we need to use the **skip** and **nrows** arguments of **read.csv2**. Also, the first row and colunm have not valuable information, so we can remove it from the dataframe. 
 ```R
-milk_production <- read.csv2('spreadsheet/table74.csv', skip = 3, nrows = 3)
+milk_production_path <- '../spreadsheet/table74.csv'
+milk_production <- read.csv2(milk_production_path, skip = 3, nrows = 3)
 milk_production <- milk_production[-1,-1]
 ```
 We need to clean the years, because it is a String, not Integer, and it is in format "X....". We also reshape our dataframe to use it in **plotly**, setting the rows as colunms and we will have only one colunm named "years". We need to use **as.numeric** and **as.character** to convert the data from **factor** to **numeric**.
@@ -35,32 +36,37 @@ Now we use the **plotly** function. First, we need to install and import the lib
 if(!require(plotly)) install.packages('plotly')
 library(plotly)
 
-font1 <- list(family = "Arial, sans-serif", size = 22, color = "black")
-font2 <- list(size = 16, color = "black")
+font1 <- list(family = "Arial, sans-serif", size = 22, color = "white")
+font2 <- list(size = 16, color = "white")
 labelx <- list(title = "Years", titlefont = font1, showticklabels = TRUE, tickfont = font2, exponentformat = "E") 
 labely <- list(title = "Milk Production (Billions of liters)", titlefont = font1, showticklabels = TRUE, tickfont = font2, exponentformat = "E")
+
 plot_ly(data, x = ~years) %>% 
-add_trace(y = ~brazilian_milk / 1000000, 
+add_trace(y = ~brazilian_milk / 1000000,
           type = "bar", 
-          name = 'Brazil', 
-          marker = list(color = 'rgb(158,202,225)', 
+          name = 'Brazil',
+          marker = list(color = '#f85125',
                         line = list(color = 'rgb(0,0,0)', 
                                     width = 1.5))) %>% 
 add_trace(y = ~rs_milk / 1000000, 
           type = "bar", 
           name = 'RS', 
-          marker = list(color = 'rgb(225,58,58)', 
+          marker = list(color = '#7122fa',
                         line = list(color = 'rgb(0,0,0)', 
-                        width = 1.5))) %>% 
+                                    width = 1.5))) %>% 
 add_lines(y = fitted(l), 
           name = 'Brazil', 
-          line = list(color = 'rgb(0,0,255)', 
+          line = list(color = 'rgb(255,10,10)', 
                       width = 3)) %>% 
 add_lines(y = fitted(l2), 
           name = 'RS state', 
-          line = list(color = 'rgb(255,0,0)', 
+          line = list(color = 'rgb(10,10,200)', 
                       width = 3)) %>% 
-layout(xaxis = labelx, yaxis = labely)
+layout(xaxis = labelx, 
+       yaxis = labely, 
+       plot_bgcolor = "rgb(0, 0, 0)", 
+       paper_bgcolor = "rgb(0, 0, 0)",
+       legend = list(font = list(color = "#ffffff")))
 ```
 ![Alt text](figures/figure1.png?raw=true "Title")
 
@@ -69,8 +75,9 @@ We can get the milk production data of all states from Brazil and create an anim
 if(!require(tidyverse)) install.packages('tidyverse')
 library(tidyverse)
 
+milk_production_by_state_path <- '../spreadsheet/table74_brazil.csv'
 
-milk_production_states <- read.csv2('spreadsheet/table74_brazil.csv', skip = 3, nrows = 31, stringsAsFactors = FALSE, encoding = "UTF-8")
+milk_production_states <- read.csv2(milk_production_by_state_path, skip = 3, nrows = 31, stringsAsFactors = FALSE, encoding = "UTF-8")
 ```
 If we check the data, we will see a need for cleaning. That is what we do next. We also add the Region information for each Brazilian State.
 ```R
@@ -109,48 +116,55 @@ library(gganimate)
 if(!require(gifski)) install.packages('gifski')
 library(gifski)
 
-staticplot = ggplot(milk_production_states_1, aes(x = rank, group = Regions)) +
-    geom_tile(aes(y = value / 2, height = value, width = 0.9, fill = as.factor(Regions)), alpha = 0.8) +
-    geom_text(aes(y = value, label = Brazilian_States, size = 5, position = position_nudge(y = -300000))) +
-    geom_text(aes(y = value, label = as.character(Value_lbl)), size = 7, position = position_nudge(y = 250000)) +
-    coord_flip(clip = "off", expand = FALSE) +
-    scale_x_reverse() +
-    labs(fill = "Region") +
-theme(legend.position = "right",
-      legend.key.width = unit(3, "cm"),
-      legend.key.size = unit(3, "cm"),
-      legend.title = element_text(hjust = 0.5, size = 20),
-      legend.text = element_text(size = 18),
-      axis.text.x = element_blank(),
-      axis.text.y = element_blank(),
-      axis.ticks = element_blank(),
-      axis.title.x = element_blank(),
-      axis.title.y = element_blank(),
-      panel.background = element_blank(),
-      plot.background = element_blank(),
-      panel.grid.major.y = element_blank(),
-      panel.border = element_blank(),
-      panel.grid.minor.x = element_line(size =.1, color = "grey" ),
-      plot.title = element_text(size = 20, hjust = 0.5, face = "bold", colour = "black"),
-      plot.subtitle = element_text(size = 14, hjust = 0.5, face = "italic", color = "black"),
-      plot.caption = element_text(size = 15, hjust = 0.5, face = "italic", color = "black"))
+staticplot <- ggplot(milk_production_states_1, aes(x = rank, group = Regions)) +
+  geom_tile(aes(y = value / 2 , height = value, width = 0.9, fill = as.factor(Regions)), alpha = 0.9) +
+  geom_text(aes(y = value, label = Brazilian_States), size = 6, nudge_y = -350000, color = "white") +
+  geom_text(aes(y = value, label = as.character(Value_lbl)), size = 7, nudge_y = 250000, color = "white") +
+  coord_flip(clip = "off", expand = FALSE) +
+  scale_x_reverse() +
+  labs(fill = "Region") +
+  theme(legend.position = "right",
+        legend.key.width = unit(3, "cm"),
+        legend.key.size = unit(3, "cm"),
+        legend.title = element_text(hjust = 0.5, size = 20, color = "white"),
+        legend.text = element_text(size = 18, color = "white"),
+        legend.background = element_rect(fill = "black"),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        panel.background = element_rect(fill = "black"),
+        plot.background = element_rect(fill = "black"),
+        panel.grid.major.y = element_blank(),
+        panel.border = element_blank(),
+        panel.grid.minor.x = element_line(size =.1, color = "grey" ),
+        plot.title = element_text(size = 20, hjust = 0.5, face = "bold", colour = "white"),
+        plot.subtitle = element_text(size = 14, hjust = 0.5, face = "italic", color = "white"),
+        plot.caption = element_text(size = 15, hjust = 0.5, face = "italic", color = "white"))
 
-anim = staticplot + 
-       transition_time(year)+
-       view_follow(fixed_x = TRUE)  +
-       labs(title = 'Milk Production in Brazilian States (Billions of Liters): {round(frame_time)}',  
+anim <- staticplot + 
+  transition_time(year) + 
+  view_follow(fixed_x = TRUE)  +
+  labs(title = 'Milk Production in Brazilian States (Billions of Liters): {round(frame_time)}',  
        subtitle = "Top 10 States",
        caption = "Milk Production in Brazilian States in Billions of Liters | Source: Brazilian Institute of Statistics and Geography.")
 
-animate(anim, 880, fps = 44, width = 1700, height = 1000, renderer = gifski_renderer("gganim.gif", loop = FALSE)) +  ease_aes('cubic-in-out') 
+animate(anim, width = 1700, height = 1000 ,nframes = 880, fps = 44, renderer = av_renderer('../figures/animation.mp4'))
+
+animate(anim, 880, fps = 44, width = 1700, height = 1000, renderer = gifski_renderer("../figures/gganim1111.gif", loop = FALSE)) +
+  ease_aes('cubic-in-out') 
 ```
 ![Alt text](figures/gif1.gif?raw=true "Title")
 
 Now, the second part of our exploratory analysis, we will get the number of dairy farms from Brazil in [2006](https://sidra.ibge.gov.br/tabela/6783) and [2017](https://sidra.ibge.gov.br/tabela/933).
 And them, we perform the same procedure that we did before with the milk production data. Note that **skip** and **nrows** arguments changed. Check the .csv file to notice the Diffs and what rows and colunms need to be removed.
 ```R
-properties_2006 <- read.csv2('spreadsheet/table933.csv', skip = 5, nrows = 1)
-properties_2017 <- read.csv2('spreadsheet/table6783.csv', skip = 5, nrows = 1)
+properties_2006_path <- '../spreadsheet/table933.csv'
+properties_2017_path <- '../spreadsheet/table6783.csv'
+  
+properties_2006 <- read.csv2(properties_2006_path, skip = 5, nrows = 1)
+properties_2017 <- read.csv2(properties_2017_path, skip = 5, nrows = 1)
 properties_2006 <- properties_2006[,-(1:2)] 
 properties_2017 <- properties_2017[,-1]     
 properties_2006 <- as.numeric(as.character(unlist(properties_2006[1,])))
@@ -169,8 +183,8 @@ sequence <- seq(1,18)
 ```
 Finally, we can draw two horizontal barplots showing the absolute and percentual variation values of dairy milk properties in Brazil.
 ```R
-plot_ly(x = (properties_2017-properties_2006)/1000, 
-        y = reorder(properties_range,sequence),
+plot_ly(x = (properties_2017 - properties_2006) / 1000, 
+        y = reorder(properties_range, sequence),
         type = 'bar', 
         orientation = 'h',
         marker = list(color = 'rgba(50, 171, 96, 0.6)',
@@ -179,22 +193,25 @@ plot_ly(x = (properties_2017-properties_2006)/1000,
 layout(yaxis = list(showgrid = TRUE, 
                     showline = FALSE, 
                     showticklabels = TRUE, 
-                    domain= c(0, 0.85), 
-                    title = "Range of property size (hectares)"), 
+                    domain = c(0, 0.85), 
+                    title = "Range of property size (hectares)"),
        xaxis = list(zeroline = FALSE, 
                     showline = FALSE, 
                     showticklabels = TRUE, 
                     showgrid = TRUE,
-                    title = "Variation in Number of Dairy Farms (thousands)"),
-       font = list(size = 8)) %>% 
+                    title = "Variation in Number of Dairy Farms (thousands)",
+                    gridcolor = 'rgba(100, 100, 100, 0.6)'),
+       font = list(size = 16, color = 'rgb(255, 255, 255)'),
+       plot_bgcolor = "rgb(0, 0, 0)", 
+       paper_bgcolor = "rgb(0, 0, 0)") %>% 
 add_annotations(xref = 'x1', 
                 yref = 'y',
-                x = (properties_2017 - properties_2006) / 1000,  
+                x = ((properties_2017 - properties_2006) / 1000) - 1,  
                 y = properties_range, 
-                text = paste(round((properties_2017-properties_2006)/1000, 0), 'k'),
+                text = paste(round((properties_2017 - properties_2006) / 1000, 1), 'k'),
                 font = list(family = 'Arial', 
-                            size = 8, 
-                            color = 'rgb(0, 0, 0)'),
+                            size = 16, 
+                            color = 'rgb(255, 255, 255)'),
                 showarrow = FALSE)
 ```
 ![Alt text](figures/figure2.png?raw=true "Title")
@@ -209,22 +226,25 @@ plot_ly(x = ((properties_2017 - properties_2006) / properties_2006) * 100,
 layout(yaxis = list(showgrid = TRUE, 
                     showline = FALSE, 
                     showticklabels = TRUE, 
-                    domain= c(0, 0.85), 
+                    domain = c(0, 0.85), 
                     title = "Range of property size (hectares)"), 
        xaxis = list(zeroline = FALSE, 
                     showline = FALSE, 
                     showticklabels = TRUE, 
                     showgrid = TRUE, 
-                    title = "Percentual Variation of Dairy Farms (%)"),
-       font = list(size = 8)) %>% 
+                    title = "Percentual Variation of Dairy Farms (%)",
+                    gridcolor = 'rgba(100, 100, 100, 0.6)'),
+       font = list(size = 16, color = 'rgb(255, 255, 255)'),
+       plot_bgcolor = "rgb(0, 0, 0)", 
+       paper_bgcolor = "rgb(0, 0, 0)") %>% 
 add_annotations(xref = 'x1', 
                 yref = 'y',
                 x = ((properties_2017 - properties_2006) / properties_2006) * 100,  
                 y = properties_range, 
                 text = paste(round(((properties_2017 - properties_2006) / properties_2006) * 100, 2), '%'),
                 font = list(family = 'Arial', 
-                            size = 8, 
-                            color = 'rgb(0, 0, 0)'),
+                            size = 16, 
+                            color = 'rgb(255, 255, 255)'),
                 showarrow = FALSE)
 ```
 ![Alt text](figures/figure3.png?raw=true "Title")
@@ -311,9 +331,13 @@ Here we will analyse how the milk production and the number of milk farms behave
 if (!require(rgdal)) install.packages("rgdal")
 library(rgdal)
 
-shape_rs <- readOGR('shape/Municipios_IBGE.shp', use_iconv = TRUE, encoding = "utf8")
-milk_production_2017_rs <- read.csv('spreadsheet/table6783_rs.csv', skip = 5, stringsAsFactors = FALSE, encoding = "UTF-8", sep = ';')
-milk_production_2006_rs <- read.csv2('spreadsheet/table933_rs.csv', skip = 5, stringsAsFactors = FALSE, encoding = "UTF-8")
+shape_rs_path <- '../shape/Municipios_IBGE.shp'
+milk_production_2017_rs_path <- '../spreadsheet/table6783_rs.csv'
+milk_production_2006_rs_path <- '../spreadsheet/table933_rs.csv'
+
+shape_rs <- readOGR(shape_rs_path, use_iconv = TRUE, encoding = "utf8")
+milk_production_2017_rs <- read.csv(milk_production_2017_rs_path, skip = 5, stringsAsFactors = FALSE, encoding = "UTF-8", sep = ';')
+milk_production_2006_rs <- read.csv2(milk_production_2006_rs_path, skip = 5, stringsAsFactors = FALSE, encoding = "UTF-8")
 ```
 After checking the data, we need to perform some cleaning to deal with missing values and strings.
 ```R
@@ -414,14 +438,14 @@ geom_polygon(data = map_data,
              aes(fill = cat,
                  x = long, 
                  y = lat,
-                 group = group), 
+                 group = group),
              color = "black", 
              size = 0.1) +
 scale_fill_manual(values = c("#800000", "#FF0000", "#FFA07A", "#98FB98", "#11DD7F", "#3CB371", "#2E8B57", "#008000", "#005000", "#FFFFFF"),
                   name = "Milk Production Variation - Source: IBGE, 2019.",
                   drop = FALSE,
                   guide = guide_legend(direction = "horizontal",
-                                       keyheight = unit(3, units = "mm"),
+                                       keyheight = unit(6, units = "mm"),
                                        keywidth = unit(18, units = "mm"),
                                        title.position = 'top',
                                        title.hjust = 0.5,
@@ -432,9 +456,20 @@ scale_fill_manual(values = c("#800000", "#FF0000", "#FFA07A", "#98FB98", "#11DD7
                                        label.position = "bottom")) +
 coord_equal() +
 theme(legend.position = "bottom", 
-      legend.title = element_text(size = 12), 
-      legend.text = element_text(size = 6), 
-      plot.title = element_text(size = 15)) +
+      legend.title = element_text(size = 12, color = "white"), 
+      legend.text = element_text(size = 7, color = "white"),
+      legend.background = element_rect(fill = "black"),
+      plot.title = element_text(size = 16, color = "white"),
+      panel.background = element_rect(fill = "black"),
+      panel.grid.minor.y = element_line(size =.1, color = "grey"),
+      panel.grid.minor.x = element_line(size =.1, color = "grey"),
+      panel.grid.major.y = element_line(size =.1, color = "grey"),
+      panel.grid.major.x = element_line(size =.1, color = "grey"),
+      plot.background = element_rect(fill = "black"),
+      axis.text.x = element_text(color = "white"),
+      axis.text.y = element_text(color = "white"),
+      axis.title.x = element_text(color = "white"),
+      axis.title.y = element_text(color = "white")) +
 labs(x = NULL, 
      y = NULL, 
      title = "Milk Production Variation Between 2006 and 2017 in Rio Grande do Sul - Brazil ")
@@ -444,8 +479,11 @@ labs(x = NULL,
 Now we follow the almost same steps to verify how the properties number behaved in 2006-2017 period.
 
 ```R
-milk_properties_2006 <- read.csv('spreadsheet/table1227.csv', skip = 4, encoding = "UTF-8", stringsAsFactors = FALSE, sep=';')
-milk_properties_2017 <- read.csv('spreadsheet/table6782.csv', skip = 4, encoding = "UTF-8", stringsAsFactors = FALSE, sep=';')
+milk_properties_2006_rs_path <- '../spreadsheet/table1227.csv'
+milk_properties_2017_rs_path <- '../spreadsheet/table6782.csv'
+
+milk_properties_2006 <- read.csv(milk_properties_2006_rs_path, skip = 4, encoding = "UTF-8", stringsAsFactors = FALSE, sep=';')
+milk_properties_2017 <- read.csv(milk_properties_2017_rs_path, skip = 4, encoding = "UTF-8", stringsAsFactors = FALSE, sep=';')
 
 milk_properties_2006 <- milk_properties_2006[, -2]
 milk_properties_2006 <- milk_properties_2006[-(493:503),]
@@ -522,7 +560,7 @@ scale_fill_manual(values = c("#600000","#990000", "#CC4444", "#FF967A", "#FFC9CC
                   drop = FALSE,
                   guide = guide_legend(direction = "horizontal",
                                        keyheight = unit(3, units = "mm"),
-                                       keywidth = unit(18, units = "mm"),
+                                       keywidth = unit(20, units = "mm"),
                                        title.position = 'top',
                                        title.hjust = 0.5,
                                        label.hjust = 0.5,
@@ -532,9 +570,20 @@ scale_fill_manual(values = c("#600000","#990000", "#CC4444", "#FF967A", "#FFC9CC
                                        label.position = "bottom")) +
 coord_equal() +
 theme(legend.position = "bottom", 
-      legend.title = element_text(size = 12), 
-      legend.text = element_text(size = 6), 
-      plot.title = element_text(size = 12)) +
+      legend.title = element_text(size = 12, color = "white"), 
+      legend.text = element_text(size = 7, color = "white"),
+      legend.background = element_rect(fill = "black"),
+      plot.title = element_text(size = 16, color = "white"),
+      panel.background = element_rect(fill = "black"),
+      panel.grid.minor.y = element_line(size =.1, color = "grey"),
+      panel.grid.minor.x = element_line(size =.1, color = "grey"),
+      panel.grid.major.y = element_line(size =.1, color = "grey"),
+      panel.grid.major.x = element_line(size =.1, color = "grey"),
+      plot.background = element_rect(fill = "black"),
+      axis.text.x = element_text(color = "white"),
+      axis.text.y = element_text(color = "white"),
+      axis.title.x = element_text(color = "white"),
+      axis.title.y = element_text(color = "white")) +
 labs(x = NULL, 
      y = NULL, 
      title = "Dairy Milk Farms Variation between 2006 - 2017 in Rio Grande do Sul - Brazil ")
@@ -546,7 +595,9 @@ And there we go. Now it is possible to verify that the milk production increased
 ## Third Part
 Now, we will create an animated map, showing how the milk production behaved in all cities from Rio Grande do Sul state, from Brazil. First, we download the needed [Data](https://sidra.ibge.gov.br/tabela/74). You need to check the data yourself before the cleaning stage to see what is wrong with the spreadsheet. We import and clean the data first.
 ```R
-milk_production_rs_cities <- read.csv2('spreadsheet/table74_rs_cities.csv', skip = 3, stringsAsFactors = FALSE, encoding = "UTF-8")
+milk_production_rs_cities_path <- '../spreadsheet/table74_rs_cities.csv'
+milk_production_rs_cities <- read.csv2(milk_production_rs_cities_path, skip = 3, stringsAsFactors = FALSE, encoding = "UTF-8")
+
 milk_production_rs_cities <- milk_production_rs_cities[-(1:2),]
 milk_production_rs_cities <- milk_production_rs_cities[-(498:510),]
 colnames(milk_production_rs_cities) <- gsub("X", '', colnames(milk_production_rs_cities))
@@ -643,9 +694,20 @@ p <- ggplot() +
                  size = 0.1) +
     coord_equal() +
     theme(legend.position = "bottom", 
-         legend.title = element_text(size = 20), 
-         legend.text = element_text(size = 18), 
-         plot.title = element_text(size = 24)) +
+         legend.title = element_text(size = 20, color = "white"), 
+         legend.text = element_text(size = 18, color = "white"),
+         legend.background = element_rect(fill = "black"),
+         plot.title = element_text(size = 24, color = "white"),
+         panel.background = element_rect(fill = "black"),
+         panel.grid.minor.y = element_line(size =.1, color = "grey"),
+         panel.grid.minor.x = element_line(size =.1, color = "grey"),
+         panel.grid.major.y = element_line(size =.1, color = "grey"),
+         panel.grid.major.x = element_line(size =.1, color = "grey"),
+         plot.background = element_rect(fill = "black"),
+         axis.text.x = element_text(color = "white"),
+         axis.text.y = element_text(color = "white"),
+         axis.title.x = element_text(color = "white"),
+         axis.title.y = element_text(color = "white")) +
     labs(x = NULL, 
          y = NULL, 
          title = "Milk Production in {round(frame_time,0)} - Rio Grande do Sul - Brazil ") + 
@@ -662,7 +724,7 @@ p <- ggplot() +
                                            reverse = T,
                                            label.position = "bottom")) + 
     transition_time(year)
-
+    
 animate(p, nframes = 220, fps = 10, width = 1500, height = 1200, renderer = gifski_renderer("gganimsss.gif")) +  ease_aes('cubic-in-out')
 ```
 

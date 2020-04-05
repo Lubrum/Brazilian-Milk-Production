@@ -1,17 +1,7 @@
-milk_production_rs_cities <- read.csv2('spreadsheet/table74_rs_cities.csv', skip = 3, stringsAsFactors = FALSE, encoding = "UTF-8")
+#Created by: Luciano Brum
+#Last modified: 5 apr, 2020
 
-milk_production_rs_cities <- milk_production_rs_cities[-(1:2),]
-milk_production_rs_cities <- milk_production_rs_cities[-(498:510),]
-
-colnames(milk_production_rs_cities) <- gsub("X", '', colnames(milk_production_rs_cities))
-milk_production_rs_cities[, 1] <- gsub(" [(]RS[)]","",milk_production_rs_cities[, 1])
-colnames(milk_production_rs_cities)[1] <- "Cities"
-
-for(i in 2:ncol(milk_production_rs_cities)){
-        milk_production_rs_cities[, i] <- gsub("[...]", "0", milk_production_rs_cities[, i])
-        milk_production_rs_cities[, i] <- gsub("[-]", "0", milk_production_rs_cities[, i])
-        milk_production_rs_cities[, i] <- as.numeric(as.character(unlist(milk_production_rs_cities[, i])))
-}
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 if (!require(rgdal)) install.packages("rgdal")
 library(rgdal)
@@ -31,6 +21,10 @@ library(gganimate)
 if (!require(gifski)) install.packages("gifski")
 library(gifski)
 
+#If failed is because libudunits2.so was not found. Try installing:
+# * deb: libudunits2-dev (Debian, Ubuntu, ...)
+# * rpm: udunits2-devel (Fedora, EPEL, ...)
+# * brew: udunits (OSX)
 if(!require(transformr)) install.packages('transformr')
 library(transformr)
 
@@ -40,7 +34,24 @@ library(reshape)
 if(!require(av)) install.packages("av")
 library(av)
 
-shape_rs <- readOGR("shape/Municipios_IBGE.shp", "Municipios_IBGE", use_iconv = TRUE, encoding = "UTF-8")
+milk_production_rs_cities_path <- '../spreadsheet/table74_rs_cities.csv'
+milk_production_rs_cities <- read.csv2(milk_production_rs_cities_path, skip = 3, stringsAsFactors = FALSE, encoding = "UTF-8")
+
+milk_production_rs_cities <- milk_production_rs_cities[-(1:2),]
+milk_production_rs_cities <- milk_production_rs_cities[-(498:510),]
+
+colnames(milk_production_rs_cities) <- gsub("X", '', colnames(milk_production_rs_cities))
+milk_production_rs_cities[, 1] <- gsub(" [(]RS[)]","",milk_production_rs_cities[, 1])
+colnames(milk_production_rs_cities)[1] <- "Cities"
+
+for(i in 2:ncol(milk_production_rs_cities)){
+        milk_production_rs_cities[, i] <- gsub("[...]", "0", milk_production_rs_cities[, i])
+        milk_production_rs_cities[, i] <- gsub("[-]", "0", milk_production_rs_cities[, i])
+        milk_production_rs_cities[, i] <- as.numeric(as.character(unlist(milk_production_rs_cities[, i])))
+}
+
+shape_rs_path <- "../shape/Municipios_IBGE.shp"
+shape_rs <- readOGR(shape_rs_path, "Municipios_IBGE", use_iconv = TRUE, encoding = "UTF-8")
 
 shape_rs@data$Label_N[!shape_rs@data$Label_N %in% milk_production_rs_cities$Cities]
 milk_production_rs_cities[239,1] <- "Maçambara"
@@ -90,9 +101,20 @@ p <- ggplot() +
                  size = 0.1) +
     coord_equal() +
     theme(legend.position = "bottom", 
-         legend.title = element_text(size = 20), 
-         legend.text = element_text(size = 18), 
-         plot.title = element_text(size = 24)) +
+         legend.title = element_text(size = 20, color = "white"), 
+         legend.text = element_text(size = 18, color = "white"),
+         legend.background = element_rect(fill = "black"),
+         plot.title = element_text(size = 24, color = "white"),
+         panel.background = element_rect(fill = "black"),
+         panel.grid.minor.y = element_line(size =.1, color = "grey"),
+         panel.grid.minor.x = element_line(size =.1, color = "grey"),
+         panel.grid.major.y = element_line(size =.1, color = "grey"),
+         panel.grid.major.x = element_line(size =.1, color = "grey"),
+         plot.background = element_rect(fill = "black"),
+         axis.text.x = element_text(color = "white"),
+         axis.text.y = element_text(color = "white"),
+         axis.title.x = element_text(color = "white"),
+         axis.title.y = element_text(color = "white")) +
     labs(x = NULL, 
          y = NULL, 
          title = "Milk Production in {round(frame_time,0)} - Rio Grande do Sul - Brazil ") + 
@@ -112,4 +134,4 @@ p <- ggplot() +
 
 animate(p, nframes = 220, fps = 10, width = 1500, height = 1200, renderer = av_renderer('animation.mp4'))+  ease_aes('cubic-in-out')
 
-animate(p, nframes = 55, fps = 10, width = 1500, height = 1200, renderer = gifski_renderer("gganimsss.gif")) +  ease_aes('cubic-in-out')
+animate(p, nframes = 220, fps = 10, width = 1290, height = 1200, renderer = gifski_renderer("gganimsss.gif")) +  ease_aes('cubic-in-out')

@@ -1,17 +1,46 @@
+#Created by: Luciano Brum
+#Last modified: 4 apr, 2020
+
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+
 if (!require(rgdal)) install.packages("rgdal")
 library(rgdal)
 
-shape_rs <- readOGR('../shape/Municipios_IBGE.shp', use_iconv = TRUE, encoding = "utf8")
-milk_production_2017_rs <- read.csv('../spreadsheet/table6783_rs.csv', skip = 5, stringsAsFactors = FALSE, encoding = "UTF-8", sep = ';')
-milk_production_2006_rs <- read.csv2('../spreadsheet/table933_rs.csv', skip = 5, stringsAsFactors = FALSE, encoding = "UTF-8")
+if (!require(reshape)) install.packages("reshape")
+library(reshape)
+
+if (!require(dplyr)) install.packages("dplyr")
+library(dplyr)
+
+if (!require(ggplot2)) install.packages("ggplot2")
+library(ggplot2)
+
+if(!require(RColorBrewer)) install.packages('RColorBrewer')
+library(RColorBrewer)
+
+if(!require(maps)) install.packages('maps')
+library(maps)
+
+if(!require(ggpubr)) install.packages('ggpubr')
+library(ggpubr)
+
+shape_rs_path <- '../shape/Municipios_IBGE.shp'
+milk_production_2017_rs_path <- '../spreadsheet/table6783_rs.csv'
+milk_production_2006_rs_path <- '../spreadsheet/table933_rs.csv'
+
+shape_rs <- readOGR(shape_rs_path, use_iconv = TRUE, encoding = "utf8")
+milk_production_2017_rs <- read.csv(milk_production_2017_rs_path, skip = 5, stringsAsFactors = FALSE, encoding = "UTF-8", sep = ';')
+milk_production_2006_rs <- read.csv2(milk_production_2006_rs_path, skip = 5, stringsAsFactors = FALSE, encoding = "UTF-8")
 
 milk_production_2006_rs <- milk_production_2006_rs[,-2]
 milk_production_2006_rs <- milk_production_2006_rs[-(493:503),]
 milk_production_2017_rs <- milk_production_2017_rs[-(497:511),]
+
 for(i in 1:nrow(milk_production_2017_rs)){
     milk_production_2017_rs[i,2] <- gsub("X", '0', milk_production_2017_rs[i,2])
     milk_production_2017_rs[i,1] <- gsub(" [(]RS[)]", "", milk_production_2017_rs[i,1])
 }
+
 for(i in 1:nrow(milk_production_2006_rs)){
     milk_production_2006_rs[i,2] <- gsub("X", '0', milk_production_2006_rs[i,2])
     milk_production_2006_rs[i,1] <- gsub(" [(]RS[)]", "", milk_production_2006_rs[i,1])
@@ -35,15 +64,6 @@ milk_production_2017_rs[495,1] <- "Westfalia"
 
 colnames(milk_production_2006_rs) <- c("City","Milk_2006")
 colnames(milk_production_2017_rs) <- c("City","Milk_2017")
-
-if (!require(reshape)) install.packages("reshape")
-library(reshape)
-
-if (!require(dplyr)) install.packages("dplyr")
-library(dplyr)
-
-if (!require(ggplot2)) install.packages("ggplot2")
-library(ggplot2)
 
 shape_rs@data$id <- c(1:nrow(shape_rs@data))
 shapefile_df <- fortify(shape_rs, region = 'id') %>% mutate(id = as.numeric(id))
@@ -79,12 +99,6 @@ map_data$cat <- ifelse(map_data$Percentual < -0.5, 1,
 map_data$cat <- factor(map_data$cat, levels = c(1:10), labels = c("-100% <-> -50%", "-50% <-> -25%", 
     "-25% <-> 0%", "0% <-> 10%", "10% <-> 20%", "20% <-> 30%", "30% <-> 50%", "50% <-> 100%", "100% or More", "Undetermined"))
 
-if(!require(RColorBrewer)) install.packages('RColorBrewer')
-library(RColorBrewer)
-
-if(!require(maps)) install.packages('maps')
-library(maps)
-
 a <- ggplot() + 
 geom_polygon(data = map_data, 
              aes(fill = cat,
@@ -97,7 +111,7 @@ scale_fill_manual(values = c("#800000", "#FF0000", "#FFA07A", "#98FB98", "#11DD7
                   name = "Milk Production Variation - Source: IBGE, 2019.",
                   drop = FALSE,
                   guide = guide_legend(direction = "horizontal",
-                                       keyheight = unit(3, units = "mm"),
+                                       keyheight = unit(6, units = "mm"),
                                        keywidth = unit(18, units = "mm"),
                                        title.position = 'top',
                                        title.hjust = 0.5,
@@ -108,15 +122,29 @@ scale_fill_manual(values = c("#800000", "#FF0000", "#FFA07A", "#98FB98", "#11DD7
                                        label.position = "bottom")) +
 coord_equal() +
 theme(legend.position = "bottom", 
-      legend.title = element_text(size = 12), 
-      legend.text = element_text(size = 6), 
-      plot.title = element_text(size = 15)) +
+      legend.title = element_text(size = 12, color = "white"), 
+      legend.text = element_text(size = 7, color = "white"),
+      legend.background = element_rect(fill = "black"),
+      plot.title = element_text(size = 16, color = "white"),
+      panel.background = element_rect(fill = "black"),
+      panel.grid.minor.y = element_line(size =.1, color = "grey"),
+      panel.grid.minor.x = element_line(size =.1, color = "grey"),
+      panel.grid.major.y = element_line(size =.1, color = "grey"),
+      panel.grid.major.x = element_line(size =.1, color = "grey"),
+      plot.background = element_rect(fill = "black"),
+      axis.text.x = element_text(color = "white"),
+      axis.text.y = element_text(color = "white"),
+      axis.title.x = element_text(color = "white"),
+      axis.title.y = element_text(color = "white")) +
 labs(x = NULL, 
      y = NULL, 
      title = "Milk Production Variation Between 2006 and 2017 in Rio Grande do Sul - Brazil ")
 
-milk_properties_2006 <- read.csv('../spreadsheet/table1227.csv', skip = 4, encoding = "UTF-8", stringsAsFactors = FALSE, sep=';')
-milk_properties_2017 <- read.csv('../spreadsheet/table6782.csv', skip = 4, encoding = "UTF-8", stringsAsFactors = FALSE, sep=';')
+milk_properties_2006_rs_path <- '../spreadsheet/table1227.csv'
+milk_properties_2017_rs_path <- '../spreadsheet/table6782.csv'
+
+milk_properties_2006 <- read.csv(milk_properties_2006_rs_path, skip = 4, encoding = "UTF-8", stringsAsFactors = FALSE, sep=';')
+milk_properties_2017 <- read.csv(milk_properties_2017_rs_path, skip = 4, encoding = "UTF-8", stringsAsFactors = FALSE, sep=';')
 
 milk_properties_2006 <- milk_properties_2006[, -2]
 milk_properties_2006 <- milk_properties_2006[-(493:503),]
@@ -193,7 +221,7 @@ scale_fill_manual(values = c("#600000","#990000", "#CC4444", "#FF967A", "#FFC9CC
                   drop = FALSE,
                   guide = guide_legend(direction = "horizontal",
                                        keyheight = unit(3, units = "mm"),
-                                       keywidth = unit(18, units = "mm"),
+                                       keywidth = unit(20, units = "mm"),
                                        title.position = 'top',
                                        title.hjust = 0.5,
                                        label.hjust = 0.5,
@@ -203,14 +231,22 @@ scale_fill_manual(values = c("#600000","#990000", "#CC4444", "#FF967A", "#FFC9CC
                                        label.position = "bottom")) +
 coord_equal() +
 theme(legend.position = "bottom", 
-      legend.title = element_text(size = 12), 
-      legend.text = element_text(size = 6), 
-      plot.title = element_text(size = 12)) +
+      legend.title = element_text(size = 12, color = "white"), 
+      legend.text = element_text(size = 7, color = "white"),
+      legend.background = element_rect(fill = "black"),
+      plot.title = element_text(size = 16, color = "white"),
+      panel.background = element_rect(fill = "black"),
+      panel.grid.minor.y = element_line(size =.1, color = "grey"),
+      panel.grid.minor.x = element_line(size =.1, color = "grey"),
+      panel.grid.major.y = element_line(size =.1, color = "grey"),
+      panel.grid.major.x = element_line(size =.1, color = "grey"),
+      plot.background = element_rect(fill = "black"),
+      axis.text.x = element_text(color = "white"),
+      axis.text.y = element_text(color = "white"),
+      axis.title.x = element_text(color = "white"),
+      axis.title.y = element_text(color = "white")) +
 labs(x = NULL, 
      y = NULL, 
      title = "Dairy Milk Farms Variation between 2006 - 2017 in Rio Grande do Sul - Brazil ")
-
-if(!require(ggpubr)) install.packages('ggpubr')
-library(ggpubr)
 
 ggarrange(a, b, nrow = 2)
