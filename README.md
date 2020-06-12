@@ -19,9 +19,9 @@ Dairy Milk Production by RS city, Dairy Milk Production by Brazilian state, Dair
 
 - [Brazilian Milk Production and RS milk production over the years](https://sidra.ibge.gov.br/tabela/74). 
 
-- Brazilian Milk Production and RS milk production in [2006](https://sidra.ibge.gov.br/tabela/933) and [2017](https://sidra.ibge.gov.br/tabela/6783).
+- Brazilian Milk Production and RS milk production in [2006](https://sidra.ibge.gov.br/tabela/933) and [2017](https://sidra.ibge.gov.br/tabela/6913).
 
-- Brazilian and RS dairy milk properties in [2006](https://sidra.ibge.gov.br/tabela/1227) and [2017](https://sidra.ibge.gov.br/tabela/6782).
+- Brazilian and RS dairy milk properties in [2006](https://sidra.ibge.gov.br/tabela/1227) and [2017](https://sidra.ibge.gov.br/tabela/6913).
 
 - [Shapefile of RS state](http://www.fepam.rs.gov.br/biblioteca/geo/bases_geo.asp).
 
@@ -35,13 +35,19 @@ You can clone/download/fork the project and use for your own goals.
 - **shape**: has the shapefiles used in this analysis;
 - **spreadsheet**: has source data;
 
+# Written tutorial abouts this data
+
+You can find the complete analysis of these data in my personal blog (portuguese).
+
+Link: [https://lubrum.github.io/analise](https://lubrum.github.io/analise)
+
 # Contribute
 
 Everyone is free and encouraged to contribute with this project through Pull Requests. Soon a guideline will be provided.
 
 # Credits
 
-I want to give a special thanks to IBGE (Brazilian Institute of Geography and Statistics) for providing this data for everyone interest in data analysis tasks. 
+I want to give a special thanks to IBGE (Brazilian Institute of Geography and Statistics) for providing this data for everyone with interest in data analysis tasks. 
 
 # License
 

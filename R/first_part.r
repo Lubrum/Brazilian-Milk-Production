@@ -1,5 +1,4 @@
 #Created by: Luciano Brum
-#Last modified: 4 apr, 2020
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
@@ -30,15 +29,15 @@ library(av)
 if(!require(gganimate)) install.packages('gganimate')
 library(gganimate)
 
-milk_production_path <- '../spreadsheet/table74.csv'
+milk_production_path <- '../spreadsheet/table74_2018_br_rs.csv'
 
-milk_production <- read.csv2(milk_production_path, skip = 3, nrows = 3)
-milk_production <- milk_production[-1,-1]
+milk_production <- read.csv2(milk_production_path, skip = 4, nrows = 3, sep = ',')
+milk_production <- milk_production[-3,-1]
 
 colnames(milk_production) <- gsub("X", '', colnames(milk_production))
 years <- as.integer(colnames(milk_production))
-brazilian_milk <- as.numeric(as.character(unlist(milk_production[1,], use.names=FALSE)))
-rs_milk <- as.numeric(as.character(unlist(milk_production[2,], use.names=FALSE)))
+brazilian_milk <- as.numeric(as.character(unlist(milk_production[1,], use.names = FALSE)))
+rs_milk <- as.numeric(as.character(unlist(milk_production[2,], use.names = FALSE)))
 data <- data.frame(brazilian_milk, rs_milk, years)
 
 l <- lm(data$brazilian_milk / 1000000 ~ years, data = data)
@@ -47,40 +46,41 @@ l2 <- lm(data$rs_milk / 1000000 ~ years, data = data)
 font1 <- list(family = "Arial, sans-serif", size = 22, color = "white")
 font2 <- list(size = 16, color = "white")
 labelx <- list(title = "Years", titlefont = font1, showticklabels = TRUE, tickfont = font2, exponentformat = "E") 
-labely <- list(title = "Milk Production (Billions of liters)", titlefont = font1, showticklabels = TRUE, tickfont = font2, exponentformat = "E")
+labely <- list(title = "Milk Production (Billions of liters)", titlefont = font1, showticklabels = TRUE, tickfont = font2, exponentformat = "E", gridcolor = "#666666")
 
 plot_ly(data, x = ~years) %>% 
 add_trace(y = ~brazilian_milk / 1000000,
           type = "bar", 
           name = 'Brazil',
-          marker = list(color = '#f85125',
-                        line = list(color = 'rgb(0,0,0)', 
-                                    width = 1.5))) %>% 
+          marker = list(color = 'rgb(158,202,225)',
+                        line = list(color = 'rgb(8,48,107)', 
+                                    width = 1))) %>% 
 add_trace(y = ~rs_milk / 1000000, 
           type = "bar", 
           name = 'RS', 
-          marker = list(color = '#7122fa',
-                        line = list(color = 'rgb(0,0,0)', 
-                                    width = 1.5))) %>% 
+          marker = list(color = '#FF0266',
+                        line = list(color = 'rgb(107,48,8)', 
+                                    width = 1))) %>% 
 add_lines(y = fitted(l), 
           name = 'Brazil', 
-          line = list(color = 'rgb(255,10,10)', 
-                      width = 3)) %>% 
+          line = list(color = 'rgb(158,202,225)', 
+                      width = 3,
+                      dash = 'dot')) %>% 
 add_lines(y = fitted(l2), 
           name = 'RS state', 
-          line = list(color = 'rgb(10,10,200)', 
-                      width = 3)) %>% 
+          line = list(color = '#FF0266', 
+                      width = 3,
+                      dash = 'dot')) %>% 
 layout(xaxis = labelx, 
        yaxis = labely, 
        plot_bgcolor = "rgb(0, 0, 0)", 
        paper_bgcolor = "rgb(0, 0, 0)",
        legend = list(font = list(color = "#ffffff")))
 
-milk_production_by_state_path <- '../spreadsheet/table74_brazil.csv'
+milk_production_by_state_path <- '../spreadsheet/table74_2018_states.csv'
 
-milk_production_states <- read.csv2(milk_production_by_state_path, skip = 3, nrows = 31, stringsAsFactors = FALSE, encoding = "UTF-8")
-milk_production_states <- milk_production_states[-(1:2),]
-milk_production_states <- milk_production_states[-29,]
+milk_production_states <- read.csv2(milk_production_by_state_path, skip = 4, nrows = 31, stringsAsFactors = FALSE, encoding = "UTF-8", sep = ',')
+milk_production_states <- milk_production_states[-28,]
 colnames(milk_production_states) <- gsub("X", '', colnames(milk_production_states))
 colnames(milk_production_states)[1] <- "Brazilian_States"
 
@@ -89,10 +89,9 @@ for(i in 2:ncol(milk_production_states)){
         milk_production_states[,i] <- as.numeric(as.character(unlist(milk_production_states[,i])))
 }
 
-milk_production_states <- milk_production_states[-20,]
 Regions <- c(rep("N", 7), rep("NE", 9), rep("SE", 4), rep("S", 3), rep("MW", 4))
 milk_production_states <- cbind(milk_production_states, Regions)
-milk_production_states <- milk_production_states %>%gather(year, value, 2:45) 
+milk_production_states <- milk_production_states %>% gather(year, value, 2:46) 
 milk_production_states$year <- as.numeric(milk_production_states$year)
 
 milk_production_states_1 <- milk_production_states %>%
@@ -141,15 +140,15 @@ animate(anim, width = 1700, height = 1000 ,nframes = 880, fps = 44, renderer = a
 animate(anim, 880, fps = 44, width = 1700, height = 1000, renderer = gifski_renderer("../figures/gganim1111.gif", loop = FALSE)) +
   ease_aes('cubic-in-out') 
 
-properties_2006_path <- '../spreadsheet/table933.csv'
-properties_2017_path <- '../spreadsheet/table6783.csv'
+properties_2006_path <- '../spreadsheet/table933_2006_brazil_properties.csv'
+properties_2017_path <- '../spreadsheet/table6913_2017_brazil_properties.csv'
   
 properties_2006 <- read.csv2(properties_2006_path, skip = 5, nrows = 1)
-properties_2017 <- read.csv2(properties_2017_path, skip = 5, nrows = 1)
+properties_2017 <- read.csv2(properties_2017_path, skip = 6, sep = ',')
 properties_2006 <- properties_2006[,-(1:2)] 
-properties_2017 <- properties_2017[,-1]     
+properties_2017 <- properties_2017[-20,]     
 properties_2006 <- as.numeric(as.character(unlist(properties_2006[1,])))
-properties_2017 <- as.numeric(as.character(unlist(properties_2017[1,])))
+properties_2017 <- as.numeric(as.character(unlist(properties_2017[,2])))
 
 NROW(properties_2006) == NROW(properties_2017)
 properties_2017[17] <- properties_2017[17] + properties_2017[18] 
@@ -230,64 +229,71 @@ b <- plot_ly(y = (properties_2017_2 - properties_2006_2) / 1000,
              type = 'bar', 
              orientation = 'v',
              marker = list(color = 'rgba(171, 51, 96, 0.6)',
-                           line = list(color = 'rgba(0, 0, 0, 1.0)', 
+                           line = list(color = 'rgba(255, 255, 255, 1.0)', 
                                        width = 1))) %>% 
 layout(annotations = list(x = reorder(properties_range_2, sequence_2),
                           y = (properties_2017_2 - properties_2006_2) / 1000,
                           text = paste(round((properties_2017_2 - properties_2006_2) / 1000, 0), 'k'),
                           font = list(family = 'Arial', 
                                       size = 15, 
-                                      color = 'rgb(0, 0, 0)'),
-                          showarrow = TRUE,
+                                      color = 'rgb(255, 255, 255)'),
+                          arrowcolor = "white",
                           xref = "x", 
                           yref = "y",
                           ax = 10,
                           ay = 20),
        showlegend = FALSE, 
        yaxis = list(showgrid = TRUE, 
+                    gridcolor = "rgb(48, 48, 48)",
                     showline = FALSE, 
                     showticklabels = TRUE, 
                     domain = c(0, 0.85),
                     title = "Reduction of Dairy Farms by Range (thousands) (2006->2017)"), 
        xaxis = list(tickfont = list(size = 12,
-                                    color = "black"),
+                                    color = "white"),
                     zeroline = FALSE, 
                     showline = FALSE, 
                     showticklabels = TRUE, 
                     showgrid = TRUE,
                     title = "Range of property size (hectares). *N.I (Not Informed)"),
-       font = list(size = 11))
+       font = list(size = 11, color = 'rgb(255, 255, 255)'),
+       plot_bgcolor = "rgb(0, 0, 0)", 
+       paper_bgcolor = "rgb(0, 0, 0)")
 
 c <- plot_ly(y = ((properties_2017_2 - properties_2006_2) / properties_2006_2) * 100, 
              x = reorder(properties_range_2, sequence_2),
              type = 'bar', 
              orientation = 'v',
              marker = list(color = 'rgba(250, 0, 50, 0.6)',
-                           line = list(color = 'rgba(0, 0, 0, 1.0)', 
+                           line = list(color = 'rgba(255, 255, 255, 1.0)', 
                                        width = 1))) %>% 
 layout(showlegend = FALSE,
        annotations = list(x = reorder(properties_range_2, sequence_2),
                           y = ((properties_2017_2 - properties_2006_2) /properties_2006_2) * 100,
-                          text = paste(round(((properties_2017_2 - properties_2006_2) / properties_2006_2) * 100, 0), '%'),font = list(family = 'Arial', 
+                          text = paste(round(((properties_2017_2 - properties_2006_2) / properties_2006_2) * 100, 0), '%'),
+                          font = list(family = 'Arial', 
                                       size = 15, 
-                                      color = 'rgb(0, 0, 0)'),
-                          showarrow = TRUE,
+                                      color = 'rgb(255, 255, 255)'),
+                          arrowcolor = "white",
                           xref = "x2", 
                           yref = "y2",
                           ax = 10, 
                           ay = 20),
        yaxis = list(showgrid = TRUE, 
+                    gridcolor = "rgb(48, 48, 48)",
                     showline = FALSE, 
                     showticklabels = TRUE, 
                     domain = c(0, 0.85),
                     title = "Percentual Reduction of Dairy Farms by Range (%)(2006->2017)"), 
        xaxis = list(tickfont = list(size = 12,
-                                    color = "black"),
+                                    color = "white"),
                     zeroline = FALSE, 
                     showline = FALSE, 
                     showticklabels = TRUE, 
                     showgrid = TRUE,
                     title = "Range of property size (hectares). *N.I (Not Informed)"),
-       font = list(size = 11))
+       font = list(size = 11, color = 'rgb(255, 255, 255)'),
+       plot_bgcolor = "rgb(0, 0, 0)", 
+       paper_bgcolor = "rgb(0, 0, 0)")
 subplot(b, c, titleX = TRUE, titleY = TRUE, margin = c(0.035,0,0,0.8)) %>% 
 layout(title = "Brazilian Dairy Properties Variation between 2006 and 2017")
