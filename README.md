@@ -3,6 +3,8 @@
 This project is a Exploratory Data Analysis (EDA) about Brazilian dairy milk production. This project was developed during my graduation in [Applied Computing](http://cursos.unipampa.edu.br/cursos/ppgcap/) in [Federal University of Pampa](http://novoportal.unipampa.edu.br/novoportal/), in partnership with [Brazilian Agricultural Research Colorporation](https://www.embrapa.br/en/international), also known as Embrapa.
 The content of this project can be found in this [Expanded Resume](http://publicase.unipampa.edu.br/index.php/siepe/article/view/40708). It is in portuguese, but in time, I can provide an english version of it.
 
+[All figures created can be found here](https://github.com/Lubrum/Brazilian-Milk-Production/tree/master/figures).
+
 # Motivation
 
 Get a better understanding of Brazilian dairy milk production, with main focus on Rio Grande do Sul (RS) state. RS is a state from south of Brazil. 
