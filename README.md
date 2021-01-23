@@ -37,7 +37,7 @@ You can clone/download/fork the project and use for your own goals.
 - **shape**: has the shapefiles used in this analysis;
 - **spreadsheet**: has source data;
 
-# Written tutorial abouts this data
+# Written tutorial about this data
 
 You can find the complete analysis of these data in my personal blog (portuguese).
 
