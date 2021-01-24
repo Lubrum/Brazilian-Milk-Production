@@ -1,3 +1,5 @@
+![GitHub commit activity](https://img.shields.io/github/commit-activity/y/Lubrum/Brazilian-Milk-Production) ![GitHub last commit](https://img.shields.io/github/last-commit/Lubrum/Brazilian-Milk-Production) ![GitHub repo size](https://img.shields.io/github/repo-size/Lubrum/Brazilian-Milk-Production)
+
 # Summary
 
 This project is a Exploratory Data Analysis (EDA) about Brazilian dairy milk production. This project was developed during my graduation in [Applied Computing](http://cursos.unipampa.edu.br/cursos/ppgcap/) in [Federal University of Pampa](http://novoportal.unipampa.edu.br/novoportal/), in partnership with [Brazilian Agricultural Research Colorporation](https://www.embrapa.br/en/international), also known as Embrapa.
