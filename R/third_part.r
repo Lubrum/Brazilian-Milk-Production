@@ -1,40 +1,24 @@
 #Created by: Luciano Brum
-
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-if (!require(rgdal)) install.packages("rgdal")
-library(rgdal)
+# Custom function to install packages if not already installed
+install_if_not_installed <- function(pkg, repo = "https://cran.r-project.org") {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg, dependencies = TRUE, repos = repo)
+    if (!requireNamespace(pkg, quietly = TRUE)) {
+      warning(paste("Unable to install the '", pkg, "' package."))
+    }
+  }
+}
 
-if (!require(rgeos)) install.packages("rgeos")
-library(rgeos)
+# List of packages to install if not already installed
+required_packages <- c("rgdal", "rgeos", "dplyr", "ggplot2", "gganimate", "RColorBrewer", "gifski", "transformr")
 
-if (!require(RColorBrewer)) install.packages("RColorBrewer")
-library(RColorBrewer)
+# Install required packages
+lapply(required_packages, install_if_not_installed)
 
-if (!require(dplyr)) install.packages("dplyr")
-library(dplyr)
-
-if (!require(ggplot2)) install.packages("ggplot2")
-library(ggplot2)
-
-if (!require(gganimate)) install.packages("gganimate")
-library(gganimate)
-
-if (!require(gifski)) install.packages("gifski")
-library(gifski)
-
-#If failed is because libudunits2.so was not found. Try installing:
-# * deb: libudunits2-dev (Debian, Ubuntu, ...)
-# * rpm: udunits2-devel (Fedora, EPEL, ...)
-# * brew: udunits (OSX)
-if(!require(transformr)) install.packages('transformr')
-library(transformr)
-
-if(!require(reshape)) install.packages('reshape')
-library(reshape)
-
-if(!require(av)) install.packages("av")
-library(av)
+# Load required packages
+lapply(required_packages, library, character.only = TRUE)
 
 # file path with milk production of each city in RS state 
 milk_production_rs_cities_path <- '../spreadsheet/table74_rs_cities.csv'

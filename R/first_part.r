@@ -1,33 +1,24 @@
 #Created by: Luciano Brum
-
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-if(!require(plotly)) install.packages('plotly')
-library(plotly)
+# Custom function to install packages if not already installed
+install_if_not_installed <- function(pkg, repo = "https://cran.r-project.org") {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg, dependencies = TRUE, repos = repo)
+    if (!requireNamespace(pkg, quietly = TRUE)) {
+      warning(paste("Unable to install the '", pkg, "' package."))
+    }
+  }
+}
 
-if(!require(tidyverse)) install.packages('tidyverse')
-library(tidyverse)
+# List of packages to install if not already installed
+required_packages <- c("plotly", "tidyverse", "gifski", "av", "gganimate")
 
-#- yum install cargo         (Fedora/CentOS)
-#- apt-get install cargo     (Debian/Ubuntu)
-#- brew install rustc        (MacOS)
-if(!require(gifski)) install.packages('gifski')
-library(gifski)
+# Install required packages
+lapply(required_packages, install_if_not_installed)
 
-#If failed, try installing:
-#  * deb: libavfilter-dev (Debian, Ubuntu 18.04 and up)
-#  * rpm: ffmpeg-devel (https://rpmfusion.org) (Fedora, CentOS, RHEL)
-#  * csw: ffmpeg_dev (Solaris)
-#  * brew: ffmpeg (MacOS)
-#For Ubuntu Trusty (14.04) and Xenial (16.04) use this PPA:
-#  sudo add-apt-repository -y ppa:cran/ffmpeg-3
-#  sudo apt-get update
-#  sudo apt-get install -y libavfilter-dev
-if(!require(av)) install.packages('av')
-library(av)
-
-if(!require(gganimate)) install.packages('gganimate')
-library(gganimate)
+# Load required packages
+lapply(required_packages, library, character.only = TRUE)
 
 milk_production_path <- '../spreadsheet/table74_2018_br_rs.csv'
 
@@ -35,9 +26,13 @@ milk_production <- read.csv2(milk_production_path, skip = 4, nrows = 3, sep = ',
 milk_production <- milk_production[-3,-1]
 
 colnames(milk_production) <- gsub("X", '', colnames(milk_production))
+
 years <- as.integer(colnames(milk_production))
+
 brazilian_milk <- as.numeric(as.character(unlist(milk_production[1,], use.names = FALSE)))
+
 rs_milk <- as.numeric(as.character(unlist(milk_production[2,], use.names = FALSE)))
+
 data <- data.frame(brazilian_milk, rs_milk, years)
 
 l <- lm(data$brazilian_milk / 1000000 ~ years, data = data)
@@ -81,6 +76,7 @@ milk_production_by_state_path <- '../spreadsheet/table74_2018_states.csv'
 
 milk_production_states <- read.csv2(milk_production_by_state_path, skip = 4, nrows = 31, stringsAsFactors = FALSE, encoding = "UTF-8", sep = ',')
 milk_production_states <- milk_production_states[-28,]
+
 colnames(milk_production_states) <- gsub("X", '', colnames(milk_production_states))
 colnames(milk_production_states)[1] <- "Brazilian_States"
 
@@ -90,8 +86,10 @@ for(i in 2:ncol(milk_production_states)){
 }
 
 Regions <- c(rep("N", 7), rep("NE", 9), rep("SE", 4), rep("S", 3), rep("MW", 4))
+
 milk_production_states <- cbind(milk_production_states, Regions)
 milk_production_states <- milk_production_states %>% gather(year, value, 2:46) 
+
 milk_production_states$year <- as.numeric(milk_production_states$year)
 
 milk_production_states_1 <- milk_production_states %>%
@@ -123,7 +121,7 @@ staticplot <- ggplot(milk_production_states_1, aes(x = rank, group = Regions)) +
         plot.background = element_rect(fill = "black"),
         panel.grid.major.y = element_blank(),
         panel.border = element_blank(),
-        panel.grid.minor.x = element_line(size =.1, color = "grey" ),
+        panel.grid.minor.x = element_line(linewidth =.1, color = "grey" ),
         plot.title = element_text(size = 20, hjust = 0.5, face = "bold", colour = "white"),
         plot.subtitle = element_text(size = 14, hjust = 0.5, face = "italic", color = "white"),
         plot.caption = element_text(size = 15, hjust = 0.5, face = "italic", color = "white"))

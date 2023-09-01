@@ -1,30 +1,25 @@
 #Created by: Luciano Brum
-
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-if (!require(rgdal)) install.packages("rgdal")
-library(rgdal)
+# Custom function to install packages if not already installed
+install_if_not_installed <- function(pkg, repo = "https://cran.r-project.org") {
+  if (!requireNamespace(pkg, quietly = TRUE)) {
+    install.packages(pkg, dependencies = TRUE, repos = repo)
+    if (!requireNamespace(pkg, quietly = TRUE)) {
+      warning(paste("Unable to install the '", pkg, "' package."))
+    }
+  }
+}
 
-if (!require(reshape)) install.packages("reshape")
-library(reshape)
+# List of packages to install if not already installed
+required_packages <- c("rgdal", "reshape", "dplyr", "ggplot2", "grid", 
+                       "RColorBrewer", "maps", "ggpubr")
 
-if (!require(dplyr)) install.packages("dplyr")
-library(dplyr)
+# Install required packages
+lapply(required_packages, install_if_not_installed)
 
-if (!require(ggplot2)) install.packages("ggplot2")
-library(ggplot2)
-
-if (!require(grid)) install.packages("grid")
-library(grid)
-
-if(!require(RColorBrewer)) install.packages('RColorBrewer')
-library(RColorBrewer)
-
-if(!require(maps)) install.packages('maps')
-library(maps)
-
-if(!require(ggpubr)) install.packages('ggpubr')
-library(ggpubr)
+# Load required packages
+lapply(required_packages, library, character.only = TRUE)
 
 # paths from each file with milk production in RS state
 shape_rs_path <- '../shape/Municipios_IBGE.shp'
@@ -123,7 +118,7 @@ x11(width = 11, height = 11)
 
 fig5 <- ggplot() + 
   geom_polygon(data = map_data, 
-               aes(fill = cat, x = long,y = lat, group = group),
+               aes(fill = cat, x = long, y = lat, group = group),
                color = "black", 
                size = 0.1) +
   scale_fill_manual(values = c("#800000", "#FF0000", "#FFA07A", "#98FB98", "#11DD7F", "#3CB371", "#2E8B57", "#008000", "#005000", "#FFFFFF"),
@@ -146,10 +141,10 @@ fig5 <- ggplot() +
         legend.background = element_rect(fill = "black"),
         plot.title = element_text(size = 16, color = "white"),
         panel.background = element_rect(fill = "black"),
-        panel.grid.minor.y = element_line(size =.1, color = "grey"),
-        panel.grid.minor.x = element_line(size =.1, color = "grey"),
-        panel.grid.major.y = element_line(size =.1, color = "grey"),
-        panel.grid.major.x = element_line(size =.1, color = "grey"),
+        panel.grid.minor.y = element_line(linewidth =.1, color = "grey"),
+        panel.grid.minor.x = element_line(linewidth =.1, color = "grey"),
+        panel.grid.major.y = element_line(linewidth =.1, color = "grey"),
+        panel.grid.major.x = element_line(linewidth =.1, color = "grey"),
         plot.background = element_rect(fill = "black", color = "black"),
         axis.text.x = element_text(color = "white"),
         axis.text.y = element_text(color = "white"),
@@ -274,10 +269,10 @@ theme(legend.position = "bottom",
       legend.background = element_rect(fill = "black"),
       plot.title = element_text(size = 16, color = "white"),
       panel.background = element_rect(fill = "black"),
-      panel.grid.minor.y = element_line(size =.1, color = "grey"),
-      panel.grid.minor.x = element_line(size =.1, color = "grey"),
-      panel.grid.major.y = element_line(size =.1, color = "grey"),
-      panel.grid.major.x = element_line(size =.1, color = "grey"),
+      panel.grid.minor.y = element_line(linewidth =.1, color = "grey"),
+      panel.grid.minor.x = element_line(linewidth =.1, color = "grey"),
+      panel.grid.major.y = element_line(linewidth =.1, color = "grey"),
+      panel.grid.major.x = element_line(linewidth =.1, color = "grey"),
       plot.background = element_rect(fill = "black"),
       axis.text.x = element_text(color = "white"),
       axis.text.y = element_text(color = "white"),
