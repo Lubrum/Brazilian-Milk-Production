@@ -1,1 +1,2 @@
-/notebooks/* linguist-vendored
+notebooks/* linguist-vendored
+notebooks/.ipynb_checkpoints/* linguist-vendored
